@@ -1,0 +1,156 @@
+// Global Styles
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    color: #6c757d;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; // Ensure full page height
+  }
+  
+  .container {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    flex-grow: 1; // Ensure it takes available space without pushing footer down
+  }
+  
+  // Modal Overlay - Ensure modal appears above everything else
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1050; // Ensure the modal is on top of other content
+  }
+  
+  .modal-content {
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 8px;
+    width: 500px;  // Increased size for the modal
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .modal-content h4 {
+    margin-bottom: 20px;
+    color: #3c5eff;
+  }
+  
+  // Form and Button Styles
+  button {
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    padding: 8px 12px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: none;
+  
+    &.btn-primary {
+      background-color: #3c5eff;
+      color: #ffffff;
+  
+      &:hover {
+        background-color: #2a4df2;
+      }
+    }
+  
+    &.btn-secondary {
+      background-color: #6c757d;
+      color: #ffffff;
+  
+      &:hover {
+        background-color: darken(#6c757d, 10%);
+      }
+    }
+  
+    &.btn-outline-secondary {
+      color: #3c5eff;
+      border: 1px solid #3c5eff;
+  
+      &:hover {
+        background-color: #3c5eff;
+        color: #ffffff;
+      }
+    }
+  }
+  
+  // Align "Copiar" button next to the email
+  .form-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;  // Space between email and the "Copiar" button
+    margin-bottom: 20px;
+  }
+  
+  .form-group h5 {
+    margin-bottom: 0;
+    font-size: 1rem;
+    color: #3c5eff;
+  }
+  
+  .info-container {
+    margin-top: 30px;
+  }
+  
+  .trip-container {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .trip-info {
+    margin-top: 15px;
+    color: #6c757d;
+  }
+  
+  .trip-info h5 {
+    color: #3c5eff;
+    font-size: 1.2rem;
+  }
+  
+  .success-container {
+    background-color: #f1f1f1;
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .thumbs-container i {
+    cursor: pointer;
+    font-size: 1.2rem;
+    margin-left: 10px;
+  }
+  
+  .thumbs-container i:hover {
+    transform: scale(1.2);
+  }
+  
+  .text-success {
+    font-size: 1rem;
+    color: #28a745;
+    text-align: center;
+    margin-top: 10px;
+  }
+  
+  .footer {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+    margin-top: auto;
+  }
+  

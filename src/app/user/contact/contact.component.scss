@@ -1,0 +1,72 @@
+
+.contact-container {
+    max-width: 600px;
+    margin: 60px auto;
+    padding: 30px;
+    background:rgb(168,186,242);
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    animation: fadeInUp 1s ease forwards;
+    color: #fff;
+  }
+  
+  .contact-title {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 30px;
+    color: rgb(55,14,189); /* or your project’s accent color */
+  }
+  
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .input-group input,
+  .input-group textarea {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    background: white;
+    color: rgb(55,14,189);
+    font-size: 1rem;
+    transition: 0.3s ease;
+  }
+  
+  .input-group input:focus,
+  .input-group textarea:focus {
+    outline: none;
+    background:white;
+    box-shadow: 0 0 0 2px #1b69a9aa;
+  }
+  
+  .submit-btn {
+    background: rgb(168,186,242);
+    color: rgb(55,14,189);
+    padding: 12px;
+    border:none;
+    font-weight: 500;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(42, 75, 186, 0.4);
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  

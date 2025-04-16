@@ -1,33 +1,155 @@
-.container {
-    background: linear-gradient(to bottom, #4475C4, white);
-    width: 90%;
-    height: 80vh;
-    margin: 0 auto;
+/* Reset everything */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* Ensure padding does not affect width/height */
+}
+
+/* Hero container */
+.hero-container {
+  width: 100%;
+  height: 80vh; /* Reduce the height of the container */
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center everything vertically */
+  align-items: center; /* Center everything horizontally */
+  background: url('/home2.jpg') no-repeat center center;
+  background-size: cover;
+}
+
+/* Hero title */
+.hero-title {
+  font-size: 8vw; /* Adjust title size */
+  font-weight: 900;
+  color: #3c5eff;
+  position: absolute; /* Position at the top of the viewport */
+  top: 0; /* Stick it to the top */
+  left: 50%; /* Center it horizontally */
+  transform: translateX(-50%); /* Offset the left position to truly center it */
+  margin: 0; /* No margin around the title */
+  line-height: 1;
+  text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1;
+}
+
+/* Hero text container */
+.hero-top-text {
+  position: relative;
+  z-index: 2;
+  background-color: rgba(255, 255, 255, 0.8); /* Transparent background */
+  padding: 1rem 2rem; /* Padding for the text */
+  max-width: 80%; /* Limit the max width */
+  margin-top: 100px;
+  border-radius: 15px; /* Rounded corners */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* Soft shadow around the box */
+  font-size: 1.1rem;
+  color: #333; /* Text color */
+  font-weight: 600;
+  line-height: 1.5;
+  word-wrap: break-word;
+  text-align: center; /* Center the text inside */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  /* Slide-in animation */
+  opacity: 0; /* Start as hidden */
+  transform: translateY(50px); /* Start from below */
+  animation: slideIn 1s ease-out forwards; /* Add animation */
+  animation-delay: 0.5s; /* Delay the animation a little for smoother effect */
+}
+
+/* Hero text item (For separating text in two blocks) */
+.hero-text-item {
+  margin-bottom: 1.5rem;
+}
+
+/* Uppercase text styling */
+.hero-top-text .text-uppercase {
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Bottom hero text */
+.hero-bottom-text {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 4rem;
+  font-size: 1rem;
+  color:white;
+  position: relative;
+  z-index: 2;
+
+  .ticket-icon-container {
+    display: flex;
     justify-content: center;
     align-items: center;
-    text-align: center;
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    padding: 20px;
+    flex-direction: column;
+    z-index: 2;
+    
+  }
+
+  .ticket-icon {
+    width: 32px;
+    height: auto;
+    margin-right: 0.6rem;
+    cursor: pointer; /* Make the icon appear clickable */
+    animation: bounce 1.5s ease infinite, shadowSpread 1.5s ease infinite; /* Apply bounce and shadow animations */
+  }
+
+  .under-wing-text {
+    margin-top: 0.5rem;
+  }
 }
-h1{
-    margin-top: 200px;
+
+/* Keyframes for sliding effect */
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(50px); /* Start below the container */
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0); /* End in the correct position */
+  }
 }
-h2{
-    margin-top: 20px;
-    color:#4475C4;
-    font-weight: 300;
+
+/* Bounce animation */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0); /* Start at normal position */
+  }
+  50% {
+    transform: translateY(-10px); /* Move the icon up */
+  }
 }
-h3{
-    margin-top: 20px;
-    color:gray;
-    font-weight: 200;
+
+/* Shadow spread animation */
+@keyframes shadowSpread {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Initial shadow */
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.4); /* Expand shadow */
+  }
 }
-.btn{
-    margin-top: 30px;
-    background-color: #4475C4;
-    border-color: #4475C4;
-    width:150px;
-    height:50px;
-    font-weight: 100;
+
+/* Media query for responsiveness */
+@media (max-width: 768px) {
+  /* For smaller screens, make text container take more width */
+  .hero-top-text {
+    max-width: 90%;
+  }
+
+  .hero-title {
+    font-size: 12vw;
+  }
 }

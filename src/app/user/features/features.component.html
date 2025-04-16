@@ -1,1 +1,42 @@
-<p>features works!</p>
+<div class="como-funciona-page pt-5">
+    <div class="container">
+      <h1 class="text-center mb-5">¿Cómo Funciona Tickety?</h1>
+  
+      <div class="steps mt-5 text-center">
+        <p>Es rápido y fácil. Aquí tienes cómo:</p>
+        
+        <!-- Flex Container for Steps -->
+        <div class="steps-container">
+          <!-- Step 1: Reenvía tus billetes -->
+          <div class="step-container">
+            <img src="correo.png"  class="step-icon mb-3">
+            <h3>Reenvía tus billetes</h3>
+            <p>Te asignamos una dirección de correo única. Solo tienes que reenviar tus billetes electrónicos a esa dirección, ¡y nosotros nos encargamos del resto!</p>
+          </div>
+  
+          <!-- Step 2: Organización inteligente -->
+          <div class="step-container">
+            <img src="cloud.png"  class="step-icon mb-3">
+            <h3>Organización inteligente</h3>
+            <p>Guardamos tus billetes en la nube de forma cifrada y segura para que nunca los pierdas.</p>
+          </div>
+  
+          <!-- Step 3: Visualización clara -->
+          <div class="step-container">
+            <img src="wallet.png"  class="step-icon mb-3">
+            <h3>Visualización clara</h3>
+            <p>Accede a tus trayectos, fechas, ubicaciones y compañías desde cualquier dispositivo, en una interfaz limpia y detallada.</p>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Tooltip CTA -->
+      <div class="text-center mt-5">
+        <div *ngIf="showTooltip" [ngClass]="{ 'show': showTooltip }" class="tooltip-cta">
+          <p>¿Aún no tienes cuenta?</p>
+          <a href="registro">Regístrate en un paso sencillo</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  

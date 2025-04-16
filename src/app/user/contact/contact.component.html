@@ -1,1 +1,44 @@
-<p>contact works!</p>
+<section class="contact-container">
+    <h2 class="contact-title">Contáctanos</h2>
+  
+    <form class="contact-form" #contactForm="ngForm" (ngSubmit)="onSubmit(contactForm)">
+      <div class="input-group">
+        <input 
+          type="text" 
+          name="nombre" 
+          ngModel 
+          required 
+          placeholder="Tu nombre"
+        />
+      </div>
+  
+      <div class="input-group">
+        <input 
+          type="email" 
+          name="email" 
+          ngModel 
+          required 
+          placeholder="Tu correo electrónico"
+        />
+      </div>
+  
+      <div class="input-group">
+        <textarea 
+          name="mensaje" 
+          ngModel 
+          required 
+          rows="4" 
+          placeholder="Tu mensaje"
+        ></textarea>
+      </div>
+  
+      <button 
+        type="submit" 
+        [disabled]="!contactForm.valid" 
+        class="submit-btn"
+      >
+        Enviar mensaje
+      </button>
+    </form>
+  </section>
+  

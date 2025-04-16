@@ -1,0 +1,32 @@
+<header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow">
+      <div class="container">
+        <!-- Logo -->
+        <a class="navbar-brand fw-bold fs-4 text-primary" href="/cliente/inicio">Tickety</a>
+  
+        <!-- Toggle Button for Mobile -->
+        <button class="navbar-toggler" type="button" (click)="toggleNavbar()">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+  
+        <!-- Navbar Links -->
+        <div class="collapse navbar-collapse" [ngClass]="{ 'show': isMenuOpen }" id="navbarNav">
+          <ul class="navbar-nav ms-auto d-flex align-items-center gap-4">
+            <li class="nav-item">
+              <a class="nav-link" href="/">Inicio</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/usuario/perfil">Perfil</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/usuario/mis-vuelos">Mis Vuelos</a>
+            </li>
+          </ul>
+  
+          <!-- Optional logout button or user dropdown -->
+          <button class="btn border border-primary ms-4" (click)="logout()">Cerrar Sesión</button>
+        </div>
+      </div>
+    </nav>
+  </header>
+  
