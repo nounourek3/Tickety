@@ -1,31 +1,22 @@
 <div class="container">
-  <!-- Button to open the "Add Trip" modal -->
   <button class="btn btn-primary mb-3" (click)="openModal()">Añadir Viaje</button>
 
-  <!-- Modal for adding a trip -->
   <div *ngIf="isModalOpen" class="modal-overlay">
     <div class="modal-content">
-      <h4 class="mb-3">Añadir Viaje</h4>
-
-      <!-- Display email for the user to copy -->
-      <div class="form-group mb-3" *ngIf="!trips.length">
-        <label for="email">Correo electrónico del viaje:</label>
-        <h5 class="text-primary mb-0" [innerHTML]="'viajestickety@gmail.com'"></h5>
+      <h4>Añadir Viaje</h4>
+      <div class="form-group" *ngIf="!trips.length">
+        <h5>ticketyviajes+{{ userId }}&#64;gmail.com</h5>
         <button class="btn btn-sm btn-outline-secondary" (click)="copiarEmail()">📋 Copiar</button>
       </div>
-      
-      <!-- Single button to import both "Ida" and "Vuelta" trips -->
-      <button class="btn btn-primary" (click)="importTripMock()">Importar Viaje</button>
-      
-      <!-- Close modal button -->
-      <button class="btn btn-secondary" (click)="closeModal()">Cerrar</button>
+      <div class="d-flex justify-content-between">
+        <button class="btn btn-secondary" (click)="closeModal()">Cerrar</button>
+      </div>
     </div>
   </div>
 
-  <!-- Display all imported trips -->
-  <div *ngIf="trips.length" class="info-container mt-4">
+  <div *ngIf="trips.length" class="info-container">
     <div *ngFor="let trip of trips" class="trip-container">
-      <div class="success-container mb-4 p-3 d-flex justify-content-between align-items-center">
+      <div class="success-container">
         <span>Importado con éxito. ¿Todo se ve bien?</span>
         <div class="thumbs-container">
           <i class="bi bi-hand-thumbs-up-fill text-success" (click)="handleThumbsUp()"></i>
@@ -33,17 +24,15 @@
         </div>
       </div>
 
-      <!-- Display trip details for each imported trip -->
       <div class="trip-info">
-        <h5>{{ trip.origin }} -> {{ trip.destination }} ({{ trip.type }})</h5>
-        <p>{{ trip.date }} - {{ trip.departureTime }} - {{ trip.landingTime }}</p>
-        <p>{{ trip.airline }} - {{ trip.flightNumber }}</p>
-        <p>Booking Confirm: {{ trip.bookingNumber }}</p>
-        <p>Passenger Names: {{ trip.passengerNames }}</p>
+        <h5>{{ trip.origin }} → {{ trip.destination }} ({{ trip.type || 'Ida' }})</h5>
+        <p>{{ trip.date }} · {{ trip.departureTime }} → {{ trip.landingTime }}</p>
+        <p>{{ trip.airline }} · Vuelo: {{ trip.flightNumber }}</p>
+        <p>Código de Reserva: {{ trip.bookingNumber }}</p>
+        <p>Pasajeros: {{ trip.passengerNames }}</p>
       </div>
     </div>
 
-    <!-- Copy email (only visible after trip import) -->
-    <div *ngIf="copiado" class="text-success mt-2">¡Copiado! ✅</div>
+    <div *ngIf="copiado" class="text-success">¡Copiado! ✅</div>
   </div>
 </div>
