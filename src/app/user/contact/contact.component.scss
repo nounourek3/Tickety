@@ -1,20 +1,24 @@
+.page-wrapper {
+  font-family: "Tuffy", sans-serif;
+  
+}
 
 .contact-container {
     max-width: 600px;
     margin: 60px auto;
     padding: 30px;
-    background:rgb(168,186,242);
+    background:#34698B;
     border-radius: 16px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
     animation: fadeInUp 1s ease forwards;
     color: #fff;
-  }
+}
   
   .contact-title {
     text-align: center;
     font-size: 2rem;
     margin-bottom: 30px;
-    color: rgb(55,14,189); /* or your project’s accent color */
+    color: rgb(176, 212, 246);
   }
   
   .contact-form {
@@ -44,7 +48,7 @@
   
   .submit-btn {
     background: rgb(168,186,242);
-    color: rgb(55,14,189);
+    color: white;
     padding: 12px;
     border:none;
     font-weight: 500;

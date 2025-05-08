@@ -13,7 +13,7 @@ export class FeaturesComponent implements OnInit {
   ngOnInit(): void {
     setTimeout(() => {
       this.showTooltip = true; // Show the tooltip after 5 seconds
-    }, 5000); 
+    }, 2000); 
   }
 }
 

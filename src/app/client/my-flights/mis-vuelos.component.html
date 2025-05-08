@@ -1,19 +1,23 @@
-<div class="container">
-  <button class="btn btn-primary mb-3" (click)="openModal()">Añadir Viaje</button>
+<div class="container d-flex justify-content-center align-items-center">
+  <button class="btn btn-primary mb-3 " (click)="openModal()">Añadir Viaje</button>
 
   <div *ngIf="isModalOpen" class="modal-overlay">
     <div class="modal-content">
       <h4>Añadir Viaje</h4>
-      <div class="form-group" *ngIf="!trips.length">
-        <h5>ticketyviajes+{{ userId }}&#64;gmail.com</h5>
-        <button class="btn btn-sm btn-outline-secondary" (click)="copiarEmail()">📋 Copiar</button>
-      </div>
-      <div class="d-flex justify-content-between">
-        <button class="btn btn-secondary" (click)="closeModal()">Cerrar</button>
+
+      <!-- Show userId and the alias email -->
+      <p>Usuario con id : {{ userId }}</p>
+      <h5 class="text-center">viajestickety+{{ userId }}&#64;gmail.com</h5>
+      <button class="btn btn-sm btn-outline-secondary mt-1" (click)="copiarEmail()">Copiar</button>
+      <div *ngIf="copiado" class="text-success">¡Copiado!</div>
+  </div>
+
+      <div class="d-flex  mt-3">
+        <button class="btn btn-secondary text-center" (click)="closeModal()">Cerrar</button>
       </div>
     </div>
   </div>
-
+<div class="container">
   <div *ngIf="trips.length" class="info-container">
     <div *ngFor="let trip of trips" class="trip-container">
       <div class="success-container">
@@ -33,6 +37,5 @@
       </div>
     </div>
 
-    <div *ngIf="copiado" class="text-success">¡Copiado! ✅</div>
   </div>
 </div>
