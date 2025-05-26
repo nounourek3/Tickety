@@ -1,13 +1,13 @@
 import { ApplicationConfig } from '@angular/core';
+import { appProviders } from './app.providers';
 import { provideRouter } from '@angular/router';
-import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
-import { provideHttpClient, withFetch } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    //provideClientHydration(withEventReplay()),
-    provideHttpClient(withFetch()) 
+    provideHttpClient(withInterceptorsFromDi()),
+    ...appProviders                                // ✅ Interceptor now active
   ]
 };

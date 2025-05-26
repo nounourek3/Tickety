@@ -5,9 +5,10 @@ import { HeaderClientComponent } from "../header-client/header-client.component"
 
 @Component({
   selector: 'app-layout',
+  standalone:true,
   imports: [RouterModule, HeaderClientComponent],
   templateUrl: './layout.component.html',
-  styleUrl: './layout.component.scss'
+  styleUrls: ['./layout.component.scss']
 })
 export class LayoutComponent {
 

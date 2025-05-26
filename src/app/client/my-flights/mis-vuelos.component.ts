@@ -1,9 +1,11 @@
-import { PopupService } from './../../services/popup.service';
-import { TripService } from './../../trip.service';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Trip } from '../../trip';
+import { PopupService } from './../../services/popup.service';
+import { Flight, VueloService } from '../../services/vuelo.service';
+import { Router } from '@angular/router';
+import { ConfirmFlightComponent } from '../confirm-flight/confirm-flight.component';
+import { TokenService } from '../../services/token.service';
 
 @Component({
   selector: 'app-mis-vuelos',
@@ -11,89 +13,118 @@ import { Trip } from '../../trip';
   imports: [
     CommonModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ConfirmFlightComponent
   ],
   templateUrl: './mis-vuelos.component.html',
   styleUrls: ['./mis-vuelos.component.scss']
 })
 export class MisVuelosComponent implements OnInit {
-  isModalOpen = false;
-  trips: Trip[] = [];
-  userId = 1;
+  userId = Number(localStorage.getItem('userId')) || 0;
+  myFlights: Flight[] = [];
+  emails: any[] = []; // 🆕 List of flight emails
   copiado = false;
 
-  private languageKeywords: { [key: string]: string[] } = {
-    en: ['check-in', 'flight', 'boarding', 'reservation'],
-    es: ['check-in', 'vuelo', 'embarque', 'reserva'],
-    fr: ['enregistrement', 'vol', 'embarquement', 'réservation'],
-  };
+  isModalOpen = false;
+  selectedEmailId: number | null = null;
+  parsedFlight: any = null;
 
   constructor(
-    private tripService: TripService,
-    private popupService: PopupService
+    private flightService: VueloService,
+    private popupService: PopupService,
+    private router: Router,
+    private tokenService: TokenService,
+    private vueloService: VueloService
   ) {}
 
   ngOnInit(): void {
-    console.log('userId:', this.userId);
-    this.fetchTrips();
+    this.userId = this.tokenService.getUser()?.userId; // ✅ Clean and safe
+
+    if (!this.userId || isNaN(this.userId)) {
+      this.popupService.showMessage('No estás autenticado', 'Por favor, inicia sesión.', 'error');
+      return;
+    }
+
+    this.refreshFlights();
+    this.loadEmails(); // 🆕 load flightEmails
   }
 
-  private containsKeywords(subject: string, language: string): boolean {
-    if (!subject) return false;
-    const keywords = this.languageKeywords[language];
-    return keywords.some(keyword => subject.toLowerCase().includes(keyword.toLowerCase()));
+refreshFlights(): void {
+  const userId = this.tokenService.getUser()?.userId;
+
+  if (!userId) {
+    console.warn('❗No user ID found, cannot refresh flights.');
+    return;
   }
 
-  fetchTrips(): void {
-    this.tripService.getTripsByUserId(this.userId).subscribe({
-      next: (data) => {
-        this.trips = data;
-        // Ensure modal opens after data is loaded
-      },
-      error: (err) => console.error('Error fetching trips', err)
+  this.vueloService.getFlightsByUser(userId).subscribe({
+  next: (flights: Flight[]) => {
+  console.log('📦 ALL flights received (before filter):', flights);
+
+  this.myFlights = flights.filter(f =>
+    f.flightNumber &&
+    f.departureAirport &&
+    f.arrivalAirport &&
+    f.flightDate &&
+    f.departureTime &&
+    f.arrivalTime
+  );
+
+  console.log('✈️ Refreshed VALID flights:', this.myFlights);
+},
+
+  error: (err) => console.error('❌ Error loading flights:', err)
+});
+}
+
+
+ loadEmails(): void {
+  this.flightService.getEmailsByUser(this.userId).subscribe(
+    emails => {
+      console.log("📩 Emails fetched from backend:", emails);
+      this.emails = emails;
+    },
+    () => this.popupService.showMessage('Error', 'No se pudieron cargar los correos.', 'error')
+  );
+}
+
+
+  openCrearTarjeta(emailId: number): void {
+    this.selectedEmailId = emailId;
+    this.flightService.parseFlightEmail(emailId).subscribe(data => {
+      this.parsedFlight = { ...data, id: emailId }; // include ID for saving
+      this.isModalOpen = true;
+    }, () => {
+      this.popupService.showMessage('Error al analizar el correo', 'No se pudo extraer la información del vuelo.', 'error');
     });
   }
-  
-  openModal(): void {
-    if (this.userId) {
-      this.isModalOpen = true;
-    } else {
-      console.error('UserId is not available!');
-    }
-  }
+
+ onFlightSaved(): void {
+  this.popupService.showMessage('¡Vuelo guardado!', 'Tu tarjeta de embarque ha sido añadida.', 'success');
+
+  this.refreshFlights();
+
+  // ⏳ Wait a moment before closing the modal (to allow DOM update)
+  setTimeout(() => {
+    this.closeModal();
+  }, 200); // 200ms is usually enough
+}
+
+
 
   closeModal(): void {
     this.isModalOpen = false;
-  }
-
-  handleThumbsUp(): void {
-    this.popupService.showMessage('¡Todo está correcto!', 'El viaje ha sido confirmado exitosamente.', 'success');
-  }
-
-  async handleThumbsDown(): Promise<void> {
-    const confirmed = await this.popupService.showConfirmation(
-      'Reintentar Importar',
-      '¿Deseas reenviar el correo con la confirmación del viaje?'
-    );
-    if (confirmed) {
-      this.isModalOpen = true;
-    } else {
-      this.popupService.showMessage('No se ha realizado ningún cambio.', 'El viaje no fue reenviado.', 'info');
-    }
+    this.selectedEmailId = null;
+    this.parsedFlight = null;
   }
 
   copiarEmail(): void {
-    console.log('copiarEmail() method called');  // Add this line to ensure it's being triggered
-  const email = `viajestickety+${this.userId}@yourdomain.com`;
-  navigator.clipboard.writeText(email).then(() => {
-    this.copiado = true;
-    console.log('copiado:', this.copiado);
-    setTimeout(() => {
-      this.copiado = false;
-      console.log('copiado reset to:', this.copiado);
-    }, 6000);
-  }).catch(err => {
-    console.error('Error copying to clipboard: ', err);
-  });
-}
+    const email = `viajestickety+${this.userId}@yourdomain.com`;
+    navigator.clipboard.writeText(email).then(() => {
+      this.copiado = true;
+      setTimeout(() => this.copiado = false, 6000);
+    }).catch(err => {
+      console.error('Error copying to clipboard: ', err);
+    });
+  }
 }

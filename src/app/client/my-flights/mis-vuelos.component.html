@@ -1,41 +1,66 @@
-<div class="container d-flex justify-content-center align-items-center">
-  <button class="btn btn-primary mb-3 " (click)="openModal()">Añadir Viaje</button>
+<div class="container mt-4">
+  <h2 class="mb-3">Mis Vuelos</h2>
 
-  <div *ngIf="isModalOpen" class="modal-overlay">
-    <div class="modal-content">
-      <h4>Añadir Viaje</h4>
+  <!-- 📋 Copy forwarding email -->
+  <button class="btn btn-outline-primary mb-3" (click)="copiarEmail()">
+    Copiar email para reenvío:
+    <strong>viajestickety+{{ userId }}&#64;gmail.com</strong>
+  </button>
+  <span *ngIf="copiado" class="text-success ms-2">¡Copiado!</span>
 
-      <!-- Show userId and the alias email -->
-      <p>Usuario con id : {{ userId }}</p>
-      <h5 class="text-center">viajestickety+{{ userId }}&#64;gmail.com</h5>
-      <button class="btn btn-sm btn-outline-secondary mt-1" (click)="copiarEmail()">Copiar</button>
-      <div *ngIf="copiado" class="text-success">¡Copiado!</div>
-  </div>
-
-      <div class="d-flex  mt-3">
-        <button class="btn btn-secondary text-center" (click)="closeModal()">Cerrar</button>
-      </div>
-    </div>
-  </div>
-<div class="container">
-  <div *ngIf="trips.length" class="info-container">
-    <div *ngFor="let trip of trips" class="trip-container">
-      <div class="success-container">
-        <span>Importado con éxito. ¿Todo se ve bien?</span>
-        <div class="thumbs-container">
-          <i class="bi bi-hand-thumbs-up-fill text-success" (click)="handleThumbsUp()"></i>
-          <i class="bi bi-hand-thumbs-down-fill text-danger" (click)="handleThumbsDown()"></i>
+  <!-- 💌 LIST OF RECEIVED EMAILS -->
+  <h4 class="mt-4">📥 Correos detectados</h4>
+  <div *ngIf="emails.length > 0; else noEmails">
+    <div class="row">
+      <div class="col-md-4 mb-4" *ngFor="let email of emails">
+        <div class="card shadow">
+          <div class="card-body">
+            <h5 class="card-title">📧 {{ email.subject }}</h5>
+            <p class="card-text"><strong>De:</strong> {{ email.sender }}</p>
+            <span class="badge bg-secondary">{{ email.createdAt | date:'short' }}</span>
+            <button class="btn btn-primary mt-2" (click)="openCrearTarjeta(email.id)">
+              Guardar tarjeta de embarque
+            </button>
+          </div>
         </div>
       </div>
+    </div>
+  </div>
 
-      <div class="trip-info">
-        <h5>{{ trip.origin }} → {{ trip.destination }} ({{ trip.type || 'Ida' }})</h5>
-        <p>{{ trip.date }} · {{ trip.departureTime }} → {{ trip.landingTime }}</p>
-        <p>{{ trip.airline }} · Vuelo: {{ trip.flightNumber }}</p>
-        <p>Código de Reserva: {{ trip.bookingNumber }}</p>
-        <p>Pasajeros: {{ trip.passengerNames }}</p>
+  <ng-template #noEmails>
+    <p class="text-muted">No hay correos detectados todavía.</p>
+  </ng-template>
+
+  <!-- ✈️ LIST OF SAVED FLIGHTS -->
+  <h4 class="mt-5">🛫 Tarjetas guardadas</h4>
+  <div *ngIf="myFlights.length === 0" class="alert alert-info mt-3">
+    Aún no tienes vuelos guardados.
+  </div>
+
+  <div class="row">
+    <div class="col-md-4 mb-4" *ngFor="let flight of myFlights">
+      <div class="card shadow">
+        <div class="card-body">
+          <h5 class="card-title">✈️ {{ flight.flightNumber || 'Vuelo sin número' }}</h5>
+          <p class="card-text">
+            <strong>Desde:</strong> {{ flight.departureAirport || '—' }}<br>
+            <strong>Hasta:</strong> {{ flight.arrivalAirport || '—' }}<br>
+            <strong>Fecha:</strong> {{ flight.flightDate | date:'shortDate' }}<br>
+            <strong>Hora salida:</strong> {{ flight.departureTime || '—' }}<br>
+            <strong>Hora llegada:</strong> {{ flight.arrivalTime || '—' }}
+          </p>
+        </div>
       </div>
     </div>
-
   </div>
+
+  <!-- 🧩 Modal de confirmación dinámica -->
+  <app-confirm-flight
+  *ngIf="isModalOpen && parsedFlight"
+  [email]="parsedFlight"
+  [userId]="userId"
+  (flightSaved)="onFlightSaved()"
+  (closed)="closeModal()"
+></app-confirm-flight>
+
 </div>

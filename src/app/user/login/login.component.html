@@ -1,0 +1,16 @@
+<div class="login-container">
+  <form (submit)="login(); $event.preventDefault()">
+    <h2>Iniciar sesión</h2>
+
+    <input type="email" placeholder="Email" [(ngModel)]="email" name="email" required />
+    <input type="password" placeholder="Contraseña" [(ngModel)]="password" name="password" required />
+
+    <button type="submit">Entrar</button>
+
+    <p *ngIf="errorMessage" class="error">{{ errorMessage }}
+      <button *ngIf="errorMessage.includes('registrarte')" (click)="router.navigate(['/registro'])">Registrarme
+        
+      </button>
+    </p>
+  </form>
+</div>
