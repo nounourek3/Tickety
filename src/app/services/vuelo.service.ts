@@ -1,57 +1,57 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+
 export interface Flight {
-  id: number;
+  id?: number; // Optional for new flights
   flightNumber: string;
   bookingCode: string;
   departureAirport: string;
   arrivalAirport: string;
   departureTime: string;
   arrivalTime: string;
-  flightDate: string;
-  flightEmailId: number;
+  flightDate: string; // Format: 'yyyy-MM-dd'
   userId: number;
+  airline?: string;
+  seat?: string;
+  pdfFileName?: string;
+  durationHours?: number;
+  showDetails?: boolean;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class VueloService {
-  private apiUrl = "http://localhost:8080/api/trips";
+  private apiUrl = 'http://localhost:8080/api/flights';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
+
+  // 🔄 Get all flights for a specific user
   getFlightsByUser(userId: number): Observable<Flight[]> {
-  return this.http.get<Flight[]>(`${this.apiUrl}/user/${userId}`);
+    return this.http.get<Flight[]>(`${this.apiUrl}/user/${userId}`);
+  }
+
+  // 🆕 Save a new flight
+  saveFlight(flight: Flight): Observable<any> {
+    const token = localStorage.getItem('token');
+
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+
+    return this.http.post(this.apiUrl, flight, { headers });
+  }
+ deleteFlight(id: number) {
+  return this.http.delete(`${this.apiUrl}/${id}`);
+}
+updateFlight(id: number, flight: Flight): Observable<Flight> {
+  return this.http.put<Flight>(`http://localhost:8080/api/flights/${id}`, flight);
 }
 
 
-
-  parseFlightEmail(emailId: number): Observable<Partial<Flight>> {
-  return this.http.get<Partial<Flight>>(`${this.apiUrl}/parse/${emailId}`);
 }
 
-saveFlight(flight: any): Observable<any> {
-  const token = localStorage.getItem('token');
-  const headers = { Authorization: `Bearer ${token}` };
+  
 
-  return this.http.post(`${this.apiUrl}/flights`, flight, { headers });
-}
-
-
-getEmailsByUser(userId: number): Observable<any[]> {
-  const token = localStorage.getItem('token'); // or however you store it
-  const headers = {
-    Authorization: `Bearer ${token}`
-  };
-  return this.http.get<any[]>(`${this.apiUrl}/emails/user/${userId}`, { headers });
-}
-getFlights(userId: number) {
-  return this.http.get<Flight[]>(`http://localhost:8080/api/trips/flights/user/${userId}`);
-}
-
-
-
-
-
-}

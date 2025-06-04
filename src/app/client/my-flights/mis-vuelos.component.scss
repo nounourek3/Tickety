@@ -1,17 +1,310 @@
-.modal-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1050;
+h1, h2, h3, h4, h5, h6, button, label, input, select, textarea {
+  font-family: 'Tuffy', sans-serif !important;
 }
 
-.modal-content {
-  width: 90%;
-  max-width: 500px;
+/* === FORM CONTAINER === */
+.card {
+  border-radius: 1.5rem;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+  max-width: 800px;
+  margin: 0 auto;
+
+  h5 {
+    color: #2198E8;
+    font-weight: 900;
+    text-align: center;
+    font-size: larger;
+  }
+
+  form {
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .col-md-6 {
+      flex: 0 0 48%;
+      max-width: 48%;
+    }
+
+    label {
+      font-weight: 500;
+      color: #374151;
+      font-size: 0.85rem;
+      margin-bottom: 0.25rem;
+    }
+
+    input.form-control {
+      border-radius: 0.5rem;
+      border: 1px solid #d1d5db;
+      padding: 0.3rem 0.6rem;
+      font-size: 0.85rem;
+
+      &:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+      }
+    }
+  }
+
+  .form-check {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .form-check-label {
+    font-size: 0.85rem;
+    color: #374151;
+  }
+
+  .btn-primary {
+    background-color: #2198E8;
+    border-color: white;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    padding: 0.4rem 1.2rem;
+    font-size: 0.9rem;
+
+    &:hover {
+      background-color: #1e40af;
+      border-color: #1e40af;
+    }
+  }
 }
+
+/* === TOGGLE BUTTON === */
+.btn-success {
+  display: block;
+  margin: 0 auto 1rem;
+  background-color: #85C7F2;
+  border-color:white;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  padding: 0.45rem 1rem;
+  width:300px;
+  height:50px;
+
+  &:hover {
+    background-color: #7495AB;
+    border-color: gray;
+  }
+}
+
+/* === CENTERING HEADINGS === */
+h2, h4, h6 {
+  text-align: center;
+}
+
+
+.boarding-pass {
+  position: relative;
+  background-color: white;
+  border: 1px solid #d1d5db;
+  border-radius: 1.5rem;
+  padding: 2rem 1.5rem;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.3s ease;
+   font-family: 'Tuffy', sans-serif !important;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 320px;
+  
+
+  .header {
+    text-align: center;
+    margin-bottom: 1rem;
+
+    h5 {
+      color: #2563eb;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-size: 1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .booking-id {
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+
+    .flight-date {
+      font-size: 0.9rem;
+      color: #111827;
+      font-weight: 500;
+    }
+  }
+
+  .route {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-top: 1px dashed #e5e7eb;
+    border-bottom: 1px dashed #e5e7eb;
+
+    .location {
+      text-align: center;
+
+      .code {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #111827;
+      }
+
+      .time {
+        font-size: 0.9rem;
+        color: #1f2937;
+      }
+
+      .city {
+        font-size: 0.75rem;
+        color: #6b7280;
+      }
+    }
+
+    .plane-icon {
+      font-size: 1.5rem;
+      color: #2563eb;
+    }
+  }
+
+  .details {
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+    margin-top: 1rem;
+
+    .detail {
+      font-size: 0.8rem;
+      color: #6b7280;
+
+      .value {
+        font-weight: 600;
+        font-size: 1rem;
+        color: #111827;
+      }
+
+      .icon {
+        font-size: 1.2rem;
+        margin-bottom: 0.2rem;
+        display: block;
+        color: #2563eb;
+      }
+    }
+  }
+
+  button.delete-icon {
+    position: absolute;
+    top: 0.8rem;
+    right: 1rem;
+    font-size: 1.2rem;
+    background: none;
+    border: none;
+    color: #9ca3af;
+
+    &:hover {
+      color: #ef4444;
+    }
+  }
+}
+#upcoming {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 1rem;
+  padding-bottom: 1rem;
+
+  &::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  // 👇 Make each upcoming flight card a bit wider
+  .boarding-pass {
+    flex: 0 0 auto;
+    width: 400px; 
+    
+  }
+}
+
+
+
+
+.boarding-pass.past-flight {
+  opacity: 0.8;
+  background-color: #f3f4f6; // soft gray background
+  border-color: #d1d5db;
+  box-shadow: none;
+  
+
+  .header h5 {
+    color: #6b7280; // muted gray title
+  }
+
+  .booking-id,
+  .flight-date {
+    color: #9ca3af;
+  }
+
+  .route {
+    border-color: #e5e7eb;
+
+    .city {
+      color: #9ca3af;
+    }
+
+    .time {
+      color: #6b7280;
+    }
+
+    .code {
+      color: #4b5563;
+    }
+
+    .plane-icon {
+      color: #9ca3af;
+    }
+  }
+
+  .details {
+    .detail {
+      .label {
+        color: #9ca3af;
+      }
+
+      .value {
+        color: #4b5563;
+      }
+
+      .icon {
+        color: #9ca3af;
+      }
+    }
+  }
+
+  button.delete-icon {
+    color: #cbd5e1;
+
+    &:hover {
+      color: #ef4444;
+    }
+  }
+}
+
+

@@ -1,1 +1,189 @@
-<p>perfil works!</p>
+<!-- PERFIL DE USUARIO -->
+<div class="container py-4">
+ 
+  
+
+  <div class="card p-4 rounded-4 shadow-sm mt-4">
+    <div class="row">
+      <div class="col-md-3 text-center">
+        <div class="position-relative d-inline-block">
+          <img [src]="profileImageUrl || 'https://via.placeholder.com/120'" alt="Foto de perfil" class="rounded-circle mb-2" width="120" height="120">
+          <label class="position-absolute bottom-0 end-0 bg-primary rounded-circle p-1" style="cursor: pointer;">
+            <i class="camera-button bi bi-camera text-white" style="font-size: 1.2rem; color: black;"></i>
+
+            <input type="file" accept="image/*" hidden (change)="onProfileImageChange($event)" [disabled]="editMode">
+          </label>
+        </div>
+        <h5 class="mb-0">Alexa Rawles</h5>
+        <p class="text-muted">alexarawles&#64;gmail.com</p>
+        <button class="btn btn-outline-primary btn-sm mt-2" (click)="toggleEdit()">
+          {{ editMode ? 'Guardar' : 'Editar' }}
+        </button>
+      </div>
+
+      <div class="col-md-9">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Nombre completo</label>
+            <input type="text" class="form-control" placeholder="Tu nombre" [disabled]="!editMode">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Apodo</label>
+            <input type="text" class="form-control" placeholder="Tu apodo" [disabled]="!editMode">
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Género</label>
+            <input type="text" class="form-control" placeholder="Tu género" [disabled]="!editMode">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">País</label>
+            <input type="text" class="form-control" placeholder="Tu país" [disabled]="!editMode">
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Idioma</label>
+            <input type="text" class="form-control" placeholder="Tu idioma" [disabled]="!editMode">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Zona horaria</label>
+            <select class="form-select" [disabled]="!editMode">
+              <option value="">Selecciona</option>
+              <option value="UTC-12:00">(UTC-12:00) Baker Island</option>
+              <option value="UTC-08:00">(UTC-08:00) Pacific Time (US & Canada)</option>
+              <option value="UTC-05:00">(UTC-05:00) Eastern Time (US & Canada)</option>
+              <option value="UTC-03:00">(UTC-03:00) Buenos Aires</option>
+              <option value="UTC+00:00">(UTC+00:00) Londres</option>
+              <option value="UTC+01:00">(UTC+01:00) Madrid, París, Roma</option>
+              <option value="UTC+02:00">(UTC+02:00) Atenas, El Cairo</option>
+              <option value="UTC+03:00">(UTC+03:00) Moscú, Nairobi</option>
+              <option value="UTC+05:30">(UTC+05:30) Nueva Delhi</option>
+              <option value="UTC+08:00">(UTC+08:00) Pekín, Singapur</option>
+              <option value="UTC+09:00">(UTC+09:00) Tokio, Seúl</option>
+              <option value="UTC+12:00">(UTC+12:00) Auckland, Fiyi</option>
+            </select>
+          </div>
+        </div>
+
+      <h6 class="mt-4">Información de cuenta</h6>
+<div class="row">
+  <!-- Email -->
+  <div class="col-md-6 mb-3">
+    <label class="form-label">Correo electrónico</label>
+    <input
+      type="email"
+      class="form-control"
+      [(ngModel)]="user.email"
+      [disabled]="!editMode"
+    >
+  </div>
+
+  <!-- Password with eye icon -->
+  <div class="col-md-6 mb-3">
+    <label class="form-label">Contraseña</label>
+    <div class="position-relative">
+      <input
+        [type]="showPassword ? 'text' : 'password'"
+        class="form-control pe-5"
+        [(ngModel)]="user.password"
+        [disabled]="!editMode"
+      >
+      <i
+        class="bi"
+        [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"
+        (click)="showPassword = !showPassword"
+        *ngIf="editMode"
+        style="
+          position: absolute;
+          top: 50%;
+          right: 15px;
+          transform: translateY(-50%);
+          color: gray;
+          cursor: pointer;
+        "
+      ></i>
+    </div>
+  </div>
+
+  <!-- Confirm Password -->
+  <div class="col-md-6 mb-3" *ngIf="editMode">
+    <label class="form-label">Confirmar contraseña</label>
+    <input
+      [type]="showPassword ? 'text' : 'password'"
+      class="form-control"
+      [(ngModel)]="confirmPassword"
+    >
+    <div
+      *ngIf="user.password !== confirmPassword && confirmPassword"
+      class="text-danger mt-1"
+    >
+      Las contraseñas no coinciden.
+    </div>
+  </div>
+</div>
+
+
+
+ <!-- SECCIÓN COMUNIDAD -->
+<div class="community-section">
+  <h3>
+    Historias de la comunidad Tickety
+  </h3>
+
+  <div id="communityCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="6000">
+    <div class="carousel-inner ">
+      <ng-container *ngFor="let story of communityStories; let i = index">
+        <div class="carousel-item" [class.active]="i === 0">
+          <div class="card story-card mb-3">
+            <div class="d-flex align-items-center mb-3">
+              <img
+                [src]="story.userImage"
+                class="rounded-circle border border-2 me-3"
+                width="60"
+                height="60"
+                alt="{{ story.userName }}"
+              >
+              <div>
+                <h5 class="mb-0">{{ story.userName }}</h5>
+                <small class="text-muted">
+                  <i class="bi bi-geo-alt-fill me-1"></i>{{ story.location }}
+                </small>
+              </div>
+            </div>
+
+            <img
+              *ngIf="story.destinationImage"
+              [src]="story.destinationImage"
+              class="w-100 rounded mb-3"
+              alt="Destino"
+              style="max-height: 250px; object-fit: cover;"
+            >
+
+            <p class="mb-0 fst-italic">
+              <i class="bi bi-chat-left-quote-fill me-2 text-secondary"></i>{{ story.message }}
+            </p>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+
+    
+
+    
+    <!-- Indicators -->
+<div class="carousel-indicators ">
+  <button
+    *ngFor="let story of communityStories; let i = index"
+    type="button"
+    data-bs-target="#communityCarousel"
+    [attr.data-bs-slide-to]="i"
+    [class.active]="i === 0"
+  ></button>
+</div>
+
+  </div>
+</div>
+
+
+
+

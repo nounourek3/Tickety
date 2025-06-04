@@ -1,33 +1,46 @@
 <header>
-    <nav class="navbar navbar-expand-lg">
-      <div class="container">
-        <!-- Logo -->
-        <a class="navbar-brand" href="/">Tickety</a>
-  
-        <!-- Toggle Button for Mobile -->
-        <button class="navbar-toggler" type="button" (click)="toggleNavbar()">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-  
-        <!-- Navbar Links -->
-        <div class="collapse navbar-collapse " [ngClass]="{'collapse': isMenuOpen}" id="navbarNav">
-          <ul class="navbar-nav d-flex justify-content-center align-items-center ms-auto">
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <!-- Logo -->
+      <a class="navbar-brand" href="/">Tickety</a>
+
+      <!-- Toggle Button for Mobile -->
+      <button class="navbar-toggler" type="button" (click)="toggleNavbar()">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Navbar Links -->
+      <div class="collapse navbar-collapse" [ngClass]="{ 'show': isMenuOpen }" id="navbarNav">
+        <ul class="navbar-nav d-flex justify-content-center align-items-center mx-auto gap-4">
+          <li class="nav-item me-5">
+            <a class="nav-link" href="/">Inicio</a>
+          </li>
+          <li class="nav-item me-5">
+            <a class="nav-link" href="como-funciona">Cómo Funciona</a>
+          </li>
+          <li class="nav-item me-5">
+            <a class="nav-link" href="contacto">Contacto</a>
+          </li>
+
+          <!-- 🔐 Conditional for logged-in users -->
+          <ng-container *ngIf="isLoggedIn">
             <li class="nav-item me-5">
-              <a class="nav-link" href="/">Inicio</a>
+              <a class="nav-link" href="/client/perfil">Perfil</a>
             </li>
             <li class="nav-item me-5">
-              <a class="nav-link" href="como-funciona">Cómo Funciona</a>
+              <a class="nav-link" href="/client/mis-vuelos">Mis Vuelos</a>
             </li>
-            
-            <li class="nav-item me-5">
-              <a class="nav-link" href="contacto">Contacto</a>
+            <li class="nav-item me-2">
+              <button class="btn border border-danger" (click)="logout()">Cerrar sesión</button>
             </li>
-          </ul>
-  
-          
-          <button class="btn border border-primary ms-auto" routerLink="/login">Iniciar Sesión</button>
-        </div>
+          </ng-container>
+        </ul>
+
+        <!-- 👤 Login Button for NOT logged-in users -->
+        <ng-container *ngIf="!isLoggedIn">
+          <a class="btn border border-primary ms-auto" href="login">Iniciar Sesión</a>
+        </ng-container>
       </div>
-    </nav>
-  </header>
-  
+    </div>
+  </nav>
+</header>

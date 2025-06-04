@@ -1,35 +1,35 @@
 <header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow">
-      <div class="container">
-        <!-- Logo -->
-        <a class="navbar-brand fw-bold fs-4 text-primary" href="/cliente/inicio">Tickety</a>
-  
-        <!-- Toggle Button for Mobile -->
-        <button class="navbar-toggler" type="button" (click)="toggleNavbar()">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-  
-        <!-- Navbar Links -->
-        <div class="collapse navbar-collapse" [ngClass]="{ 'show': isMenuOpen }" id="navbarNav">
-          <ul class="navbar-nav ms-auto d-flex align-items-center gap-4">
-            <li class="nav-item">
-              <a class="nav-link" href="/">Inicio</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/usuario/perfil">Perfil</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/usuario/mis-vuelos">Mis Vuelos</a>
-            </li>
-            <li class="nav-item">
-            <button class="btn btn-outline-primary ms-lg-4 mt-2 mt-lg-0" (click)="logout()">
-              Cerrar sesión
-            </button>
-          </ul>
-  
-          
-        </div>
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <!-- Logo -->
+      <a class="navbar-brand fw-bold fs-4" href="/">Tickety</a>
+
+      <!-- Toggle Button for Mobile -->
+      <button class="navbar-toggler" type="button" (click)="toggleNavbar()">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Navbar Links -->
+      <div class="collapse navbar-collapse" [ngClass]="{ 'show': isMenuOpen }" id="navbarNav">
+        <ul class="navbar-nav ms-auto d-flex align-items-center">
+          <li class="nav-item me-4">
+            <a class="nav-link" href="/">Inicio</a>
+          </li>
+          <li class="nav-item me-4">
+            <a class="nav-link" href="/client/perfil">Perfil</a>
+          </li>
+          <li class="nav-item me-4">
+            <a class="nav-link" href="/client/mis-vuelos">Mis Vuelos</a>
+          </li>
+          <li class="nav-item me-4">
+            <a class="nav-link" href="/client/panel">Panel</a>
+
+          </li>
+          <li class="nav-item">
+            <button class="btn border border-primary" (click)="logout()">Cerrar sesión</button>
+          </li>
+        </ul>
       </div>
-    </nav>
-  </header>
-  
+    </div>
+  </nav>
+</header>

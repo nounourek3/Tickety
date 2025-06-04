@@ -1,66 +1,277 @@
-<div class="container mt-4">
-  <h2 class="mb-3">Mis Vuelos</h2>
+<div class="container mt-3">
+  
 
-  <!-- 📋 Copy forwarding email -->
-  <button class="btn btn-outline-primary mb-3" (click)="copiarEmail()">
-    Copiar email para reenvío:
-    <strong>viajestickety+{{ userId }}&#64;gmail.com</strong>
+  <!-- Toggle form -->
+  <button class="btn btn-success mb-3" (click)="isAdding = !isAdding">
+    {{ isAdding ? 'Cancelar' : '+ Añadir nuevo vuelo' }}
   </button>
-  <span *ngIf="copiado" class="text-success ms-2">¡Copiado!</span>
 
-  <!-- 💌 LIST OF RECEIVED EMAILS -->
-  <h4 class="mt-4">📥 Correos detectados</h4>
-  <div *ngIf="emails.length > 0; else noEmails">
-    <div class="row">
-      <div class="col-md-4 mb-4" *ngFor="let email of emails">
-        <div class="card shadow">
-          <div class="card-body">
-            <h5 class="card-title">📧 {{ email.subject }}</h5>
-            <p class="card-text"><strong>De:</strong> {{ email.sender }}</p>
-            <span class="badge bg-secondary">{{ email.createdAt | date:'short' }}</span>
-            <button class="btn btn-primary mt-2" (click)="openCrearTarjeta(email.id)">
-              Guardar tarjeta de embarque
-            </button>
+  <!-- Add Flight Form -->
+  <div *ngIf="isAdding" class="card p-4 mb-4 shadow-sm border">
+    <h5 class="mb-3">Añadir tarjeta de embarque</h5>
+
+    <div class="form-check form-switch mb-3">
+      <input class="form-check-input" type="checkbox" [(ngModel)]="isRoundTrip" id="roundTripToggle" />
+      <label class="form-check-label" for="roundTripToggle">Viaje de ida y vuelta</label>
+    </div>
+
+    <ng-container *ngFor="let leg of isRoundTrip ? ['ida', 'vuelta'] : ['ida']; let i = index">
+      <h6 class="text-capitalize mt-3 mb-2">Vuelo de {{ leg }}</h6>
+      <form (ngSubmit)="addFlight(leg)" #flightForm="ngForm" class="mb-4">
+        <div class="row">
+          <div class="col-md-6 mb-2">
+            <label>Número de vuelo</label>
+            <input class="form-control" [(ngModel)]="flightForms[leg].flightNumber" name="flightNumber{{ leg }}" required />
+          </div>
+
+          <div class="col-md-6 mb-2">
+            <label>Código de reserva</label>
+            <input class="form-control" [(ngModel)]="flightForms[leg].bookingCode" name="bookingCode{{ leg }}" required />
+          </div>
+
+          <div class="col-md-6 mb-2">
+  <label>Desde</label>
+  <input
+    class="form-control"
+    list="airports"
+    [(ngModel)]="flightForms[leg].departureAirport"
+    name="departureAirport{{ leg }}"
+    required
+  />
+</div>
+
+          <div class="col-md-6 mb-2">
+  <label>Hasta</label>
+  <input
+    class="form-control"
+    list="airports"
+    [(ngModel)]="flightForms[leg].arrivalAirport"
+    name="arrivalAirport{{ leg }}"
+    required
+  />
+</div>
+
+
+          <div class="col-md-6 mb-2">
+            <label>Fecha</label>
+            <input type="date" class="form-control" [(ngModel)]="flightForms[leg].flightDate" name="flightDate{{ leg }}" required />
+          </div>
+
+          <div class="col-md-6 mb-2">
+            <label>Hora salida</label>
+            <input class="form-control" [(ngModel)]="flightForms[leg].departureTime" name="departureTime{{ leg }}" required />
+          </div>
+
+          <div class="col-md-6 mb-2">
+            <label>Hora llegada</label>
+            <input class="form-control" [(ngModel)]="flightForms[leg].arrivalTime" name="arrivalTime{{ leg }}" required />
+          </div>
+
+          <div class="col-md-6 mb-2">
+            <label>Aerolínea</label>
+            <input class="form-control" [(ngModel)]="flightForms[leg].airline" name="airline{{ leg }}" />
+          </div>
+
+          <div class="col-md-6 mb-2">
+            <label>Asiento</label>
+            <input class="form-control" [(ngModel)]="flightForms[leg].seat" name="seat{{ leg }}" />
+          </div>
+
+          <div class="col-md-6 mb-2">
+            <label>Subir tarjeta PDF</label>
+            <input class="form-control" type="file" (change)="handleFileUpload($event, leg)" accept="application/pdf" />
           </div>
         </div>
-      </div>
-    </div>
+
+        <div class="mt-3 d-flex justify-content-end">
+          <button class="btn btn-primary" type="submit">Guardar vuelo de {{ leg }}</button>
+        </div>
+        <datalist id="airports">
+  <option *ngFor="let airport of airportOptions" [value]="airport.code">
+    {{ airport.name }}
+  </option>
+</datalist>
+
+      </form>
+    </ng-container>
   </div>
 
-  <ng-template #noEmails>
-    <p class="text-muted">No hay correos detectados todavía.</p>
-  </ng-template>
-
-  <!-- ✈️ LIST OF SAVED FLIGHTS -->
-  <h4 class="mt-5">🛫 Tarjetas guardadas</h4>
-  <div *ngIf="myFlights.length === 0" class="alert alert-info mt-3">
-    Aún no tienes vuelos guardados.
+  <!-- VUELOS RESERVADOS -->
+  <h4 class="mt-5">Vuelos reservados</h4>
+  <div *ngIf="upcomingFlights.length === 0" class="alert alert-info mt-3">
+    No tienes vuelos próximos.
   </div>
 
-  <div class="row">
-    <div class="col-md-4 mb-4" *ngFor="let flight of myFlights">
-      <div class="card shadow">
-        <div class="card-body">
-          <h5 class="card-title">✈️ {{ flight.flightNumber || 'Vuelo sin número' }}</h5>
-          <p class="card-text">
-            <strong>Desde:</strong> {{ flight.departureAirport || '—' }}<br>
-            <strong>Hasta:</strong> {{ flight.arrivalAirport || '—' }}<br>
-            <strong>Fecha:</strong> {{ flight.flightDate | date:'shortDate' }}<br>
-            <strong>Hora salida:</strong> {{ flight.departureTime || '—' }}<br>
-            <strong>Hora llegada:</strong> {{ flight.arrivalTime || '—' }}
-          </p>
+  <div
+    id="upcoming"
+    cdkDropList
+    [cdkDropListData]="upcomingFlights"
+    [cdkDropListConnectedTo]="['past']"
+    (cdkDropListDropped)="drop($event, 'upcoming')"
+  >
+    <div class="boarding-pass me-3" *ngFor="let flight of upcomingFlights" cdkDrag>
+      <div class="header">
+        <h5>VUELO RESERVADO</h5>
+        <div class="flight-date">{{ flight.flightDate | date:'fullDate' }}</div>
+        <div class="booking-id">
+          <i class="bi bi-ticket-perforated-fill me-1"></i>ID {{ flight.bookingCode || '---' }}
         </div>
       </div>
+
+      <div class="route">
+        <div class="location">
+          <div class="city">Desde</div>
+          <div class="code">{{ flight.departureAirport }}</div>
+          <div class="time">{{ flight.departureTime }}</div>
+        </div>
+
+        <div class="plane-icon">
+          <i class="bi bi-arrow-left-right fs-4 text-primary"></i>
+        </div>
+
+        <div class="location">
+          <div class="city">Hasta</div>
+          <div class="code">{{ flight.arrivalAirport }}</div>
+          <div class="time">{{ flight.arrivalTime }}</div>
+        </div>
+      </div>
+
+      <div class="details">
+        <div class="detail">
+          <i class="bi bi-airplane icon"></i>
+          <div class="value">{{ flight.flightNumber }}</div>
+          <div class="label">N° Vuelo</div>
+        </div>
+        <div class="detail">
+          <i class="bi bi-person-seat icon"></i>
+          <div class="value">{{ flight.seat || '---' }}</div>
+          <div class="label">Asiento</div>
+        </div>
+        <div class="detail">
+          <i class="bi bi-box-fill icon"></i>
+          <div class="value">Económica</div>
+          <div class="label">Cabina</div>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-end align-items-center gap-2">
+  <!-- Edit button (pen) -->
+  <button class="btn btn-light btn-sm p-1" (click)="editFlight(flight)" aria-label="Editar">
+    <i class="bi bi-pencil-fill"></i>
+  </button>
+
+  <!-- Delete button (×) -->
+  <button class="btn btn-light btn-sm p-1 delete-icon" (click)="deleteFlight(flight)" aria-label="Eliminar">
+    ×
+  </button>
+</div>
+
+      
     </div>
   </div>
+  <!-- FORMULARIO DE EDICIÓN -->
+<div *ngIf="selectedFlight" class="card mt-5 p-4 shadow-sm border border-primary">
+  <h5 class="mb-3"><i class="bi bi-pencil-fill me-2"></i>Editar vuelo reservado</h5>
+  <form (ngSubmit)="saveEditedFlight()">
+    <div class="row">
+      <div class="col-md-6 mb-2">
+        <label>Aerolínea</label>
+        <input class="form-control" [(ngModel)]="selectedFlight.airline" name="airline" />
+      </div>
+      <div class="col-md-6 mb-2">
+        <label>Número de vuelo</label>
+        <input class="form-control" [(ngModel)]="selectedFlight.flightNumber" name="flightNumber" />
+      </div>
+      <div class="col-md-6 mb-2">
+        <label>Fecha del vuelo</label>
+        <input type="date" class="form-control" [(ngModel)]="selectedFlight.flightDate" name="flightDate" />
+      </div>
+      <div class="col-md-6 mb-2">
+        <label>Asiento</label>
+        <input class="form-control" [(ngModel)]="selectedFlight.seat" name="seat" />
+      </div>
+    </div>
 
-  <!-- 🧩 Modal de confirmación dinámica -->
-  <app-confirm-flight
-  *ngIf="isModalOpen && parsedFlight"
-  [email]="parsedFlight"
-  [userId]="userId"
-  (flightSaved)="onFlightSaved()"
-  (closed)="closeModal()"
-></app-confirm-flight>
+    <div class="mt-3 d-flex justify-content-end gap-2">
+      <button class="btn btn-success" type="submit">Guardar cambios</button>
+      <button class="btn btn-secondary" type="button" (click)="cancelEdit()">Cancelar</button>
+    </div>
+  </form>
+</div>
 
+
+  <!-- VUELOS ANTERIORES -->
+  <h4 class="mt-5">Vuelos anteriores</h4>
+  <div *ngIf="pastFlights.length === 0" class="alert alert-info mt-3">
+    No tienes vuelos pasados.
+  </div>
+
+  <div
+    cdkDropList
+    id="past"
+    [cdkDropListData]="pastFlights"
+    [cdkDropListConnectedTo]="['upcoming']"
+    (cdkDropListDropped)="drop($event, 'past')"
+    class="row"
+  >
+    <div class="col-md-4 mb-4" *ngFor="let flight of pastFlights" cdkDrag>
+      <div class="boarding-pass past-flight">
+        <div class="header">
+          <h5>VUELO FINALIZADO</h5>
+          <div class="booking-id">
+            <i class="bi bi-ticket-perforated-fill me-1"></i>ID {{ flight.bookingCode || '---' }}
+          </div>
+          <div class="flight-date">{{ flight.flightDate | date: 'fullDate' }}</div>
+        </div>
+
+        <div class="route">
+          <div class="location">
+            <div class="city">Desde</div>
+            <div class="code">{{ flight.departureAirport }}</div>
+            <div class="time">{{ flight.departureTime }}</div>
+          </div>
+
+          <div class="plane-icon">
+            <i class="bi bi-airplane-engines fs-4"></i>
+          </div>
+
+          <div class="location">
+            <div class="city">Hasta</div>
+            <div class="code">{{ flight.arrivalAirport }}</div>
+            <div class="time">{{ flight.arrivalTime }}</div>
+          </div>
+        </div>
+
+        <div class="details">
+          <div class="detail">
+            <i class="bi bi-airplane icon"></i>
+            <div class="value">{{ flight.flightNumber }}</div>
+            <div class="label">N° Vuelo</div>
+          </div>
+          <div class="detail">
+            <i class="bi bi-person-seat icon"></i>
+            <div class="value">{{ flight.seat || '---' }}</div>
+            <div class="label">Asiento</div>
+          </div>
+          <div class="detail">
+            <i class="bi bi-box-fill icon"></i>
+            <div class="value">Economy</div>
+            <div class="label">Cabina</div>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-end align-items-center gap-2">
+  <!-- Edit button (pen) -->
+  <button class="btn btn-light btn-sm p-1" (click)="editFlight(flight)" aria-label="Editar">
+    <i class="bi bi-pencil-fill"></i>
+  </button>
+
+  <!-- Delete button (×) -->
+  <button class="btn btn-light btn-sm p-1 delete-icon" (click)="deleteFlight(flight)" aria-label="Eliminar">
+    ×
+  </button>
+</div>
+
+    </div>
+  </div>
 </div>

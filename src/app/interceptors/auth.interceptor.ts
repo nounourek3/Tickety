@@ -18,6 +18,9 @@ export class AuthInterceptor implements HttpInterceptor {
     // 2 · Get user from localStorage
     const user = JSON.parse(localStorage.getItem('tickety-user') || 'null');
     const token = user?.token;
+    console.log('➡️ Request to:', req.url);
+console.log('🔐 Token added:', token);
+
 
     // 3 · If no valid token, continue without auth
     if (!token || !token.includes('.') || token.split('.').length !== 3) {

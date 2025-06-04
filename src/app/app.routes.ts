@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { LayoutComponent as PublicLayout} from './user/layout/layout.component';
 import { HomeComponent } from './user/home/home.component';
+
 import { FeaturesComponent } from './user/features/features.component';
 import { ContactComponent } from './user/contact/contact.component';
 import { PerfilComponent } from './client/profile/perfil.component';
@@ -9,6 +10,8 @@ import { authGuard } from './auth.guard';
 import { LayoutComponent as ClientLayout} from './client/layout/layout.component';
 import { LoginComponent } from './user/login/login.component';
 import { RegisterComponent } from './user/register/register.component';
+import { PanelComponent } from './client/panel/panel.component';
+
 
 export const routes: Routes = [
 
@@ -33,9 +36,10 @@ export const routes: Routes = [
         
         children:[
             {path:"perfil", component: PerfilComponent, canActivate: [authGuard]},
-            { path:"mis-vuelos", component: MisVuelosComponent },
-
-            {path: '',redirectTo: 'mis-vuelos' ,pathMatch: 'full'}
+            { path:"mis-vuelos", component: MisVuelosComponent, canActivate: [authGuard] },
+            { path: "inicio", component: HomeComponent, canActivate: [authGuard] },
+            {path:"panel", component:PanelComponent, canActivate: [authGuard]},
+            {path: '',redirectTo: 'inicio' ,pathMatch: 'full'}
         ]
     }
 ];
