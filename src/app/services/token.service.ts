@@ -28,6 +28,10 @@ private readonly KEY = 'tickety-user';
   clear(): void {
     localStorage.removeItem(this.KEY);
   }
+  hasToken(): boolean {
+  return !!this.getToken();
+}
+
 }
 
 

@@ -1,12 +1,22 @@
 <div class="register-container">
   <form (submit)="register(); $event.preventDefault()">
-    <h2>Crear cuenta</h2>
-    <input type="text" placeholder="Nombre de usuario" [(ngModel)]="username" name="username" required/>    <input type="email" placeholder="Email" [(ngModel)]="email" name="email" required />
+    <h2 class="text-center mb-4">Crear cuenta</h2>
+
+    <input type="text" placeholder="Nombre de usuario" [(ngModel)]="username" name="username" required />
+    <input type="email" placeholder="Email" [(ngModel)]="email" name="email" required />
     <input type="password" placeholder="Contraseña" [(ngModel)]="password" name="password" required />
     <input type="password" placeholder="Confirmar contraseña" [(ngModel)]="confirmPassword" name="confirmPassword" required />
 
-    <button type="submit">Registrarse</button>
+    <button type="submit" class="btn-register">Registrarse</button>
+    <a class="btn btn-outline-primary w-100 mb-2" href="http://localhost:8080/oauth2/authorization/google">
+  <i class="bi bi-google me-2"></i> Crear cuenta con Google
+</a>
 
-    <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+
+    <p *ngIf="errorMessage" class="error mt-3">{{ errorMessage }}</p>
+
+    <p class="text-center mt-4 small">
+      ¿Ya tienes una cuenta? <a href="/login">Inicia sesión</a>
+    </p>
   </form>
 </div>

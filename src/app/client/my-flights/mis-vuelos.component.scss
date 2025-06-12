@@ -12,10 +12,11 @@ h1, h2, h3, h4, h5, h6, button, label, input, select, textarea {
   margin: 0 auto;
 
   h5 {
-    color: #2198E8;
+    color: #3b9ada;
     font-weight: 900;
     text-align: center;
     font-size: larger;
+    font-family: 'Tuffy', sans-serif !important;
   }
 
   form {
@@ -306,5 +307,83 @@ h2, h4, h6 {
     }
   }
 }
+.sassy-modal .modal-content {
+  border-radius: 1rem;
+  box-shadow: 0 0 20px rgba(255, 105, 180, 0.4);
+  animation: sassSlideUp 0.4s ease-out;
+}
 
+@keyframes sassSlideUp {
+  from {
+    transform: translateY(60px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.sassy-modal .modal-header {
+  background: linear-gradient(to right, #ff69b4, #ba55d3);
+  color: white;
+  border-bottom: 3px dashed hotpink;
+}
+
+.sassy-modal .modal-title {
+  font-weight: bold;
+  font-size: 1.4rem;
+  letter-spacing: 0.5px;
+}
+
+
+@media (max-width: 576px) {
+  .form-check-label {
+    font-size: 0.9rem;
+  }
+
+  .form-check-input {
+    transform: scale(0.9);
+  }
+
+  .btn {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+
+  .boarding-pass {
+    padding: 1rem;
+    font-size: 0.9rem;
+  }
+
+  .route .code {
+    font-size: 1.25rem;
+  }
+
+  .route .time {
+    font-size: 0.85rem;
+  }
+
+  .details {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .details .detail {
+    width: 100%;
+    margin-bottom: 0.75rem;
+  }
+}
+@media (max-width: 576px) {
+  .btn,
+  input,
+  select {
+    width: 100%;
+  }
+}
+@media (max-width: 576px) {
+  .past-flight {
+    padding: 1rem;
+  }
+}
 

@@ -24,22 +24,26 @@ export const routes: Routes = [
             {path: "contacto", component:ContactComponent},
             { path: 'login', loadComponent: () => import('./user/login/login.component').then(m => m.LoginComponent) },
 
-            { path: 'registro', loadComponent: () => import('./user/register/register.component').then(m => m.RegisterComponent) }
+            { path: 'registro', loadComponent: () => import('./user/register/register.component').then(m => m.RegisterComponent) },
+             { path: 'auth-callback', loadComponent: () => import('./user/auth-callback/auth-callback.component').then(m => m.AuthCallbackComponent) }
+    ]
+  },
 
 
-        ]
-    },
+        
+    
    
     {
-        path:"client", 
-        component: ClientLayout, 
-        
-        children:[
-            {path:"perfil", component: PerfilComponent, canActivate: [authGuard]},
-            { path:"mis-vuelos", component: MisVuelosComponent, canActivate: [authGuard] },
-            { path: "inicio", component: HomeComponent, canActivate: [authGuard] },
-            {path:"panel", component:PanelComponent, canActivate: [authGuard]},
-            {path: '',redirectTo: 'inicio' ,pathMatch: 'full'}
-        ]
-    }
+  path: "client",
+  component: ClientLayout,
+  canActivateChild: [authGuard], // ✅ apply guard to all children at once
+  children: [
+    { path: "perfil", component: PerfilComponent },
+    { path: "mis-vuelos", component: MisVuelosComponent },
+    { path: "inicio", component: HomeComponent },
+    { path: "panel", component: PanelComponent },
+    { path: '', redirectTo: 'inicio', pathMatch: 'full' }
+  ]
+}
+
 ];

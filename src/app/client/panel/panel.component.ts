@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Flight, VueloService } from '../../services/vuelo.service';
 import { CommonModule } from '@angular/common';
@@ -170,8 +170,9 @@ airportOptions = [
   const userData = localStorage.getItem('tickety-user');
   if (userData) {
     const user = JSON.parse(userData);
-    console.log('USER DATA:', user); // should show { email, userId, token }
-    this.cargarDatosPanel(Number(user.userId)); // ✅ fixed here
+    console.log('USER DATA:', user);
+    this.cargarDatosPanel(Number(user.userId)); // should show { email, userId, token }
+   
     
   }
   
@@ -338,6 +339,10 @@ initMap(visitedCountries: string[], upcomingCountries: string[], wishlistCountri
       console.error('❌ Error loading or processing GeoJSON:', err);
     }
   });
+  setTimeout(() => {
+  this.map!.resize();
+}, 100);
+
 }
 
 
@@ -363,31 +368,190 @@ addToWishlist(): void {
   if (!name) return;
 
   const nameToCodeMap: Record<string, string> = {
-    'españa': 'ES', 'espana': 'ES', 'madrid': 'ES', 'barcelona': 'ES',
-    'francia': 'FR', 'paris': 'FR',
-    'alemania': 'DE', 'alemannie': 'DE', 'berlin': 'DE',
-    'italia': 'IT', 'roma': 'IT', 'napoles': 'IT', 'napoli': 'IT',
-    'reino unido': 'GB', 'inglaterra': 'GB', 'londres': 'GB',
-    'estados unidos': 'US', 'eeuu': 'US', 'new york': 'US', 'miami': 'US',
-    'brasil': 'BR', 'rio': 'BR', 'sao paulo': 'BR',
-    'japon': 'JP', 'japón': 'JP', 'tokyo': 'JP',
-    'islandia': 'IS',
-    'méxico': 'MX', 'mexico': 'MX',
-    'chile': 'CL',
-    'argentina': 'AR',
-    'corea del sur': 'KR', 'seul': 'KR', 'seúl': 'KR',
-    'singapur': 'SG',
-    'tailandia': 'TH',
-    'turquía': 'TR', 'turquia': 'TR',
-    'dubai': 'AE', 'emiratos': 'AE', 'emiratos árabes': 'AE',
-    'marruecos': 'MA', 'casablanca': 'MA', 'marrakech': 'MA',
-    'túnez': 'TN', 'tunez': 'TN',
-    'egipto': 'EG',
-    'sudáfrica': 'ZA', 'sudafrica': 'ZA',
-    'kenia': 'KE',
-    'senegal': 'SN',
-    'nigeria': 'NG'
-  };
+     'españa': 'ES', 'espana': 'ES', 'madrid': 'ES', 'barcelona': 'ES', 'sevilla': 'ES', 'valencia': 'ES',
+
+  // 🇫🇷 France
+  'francia': 'FR', 'paris': 'FR', 'lyon': 'FR', 'marsella': 'FR', 'niza': 'FR',
+
+  // 🇩🇪 Germany
+  'alemania': 'DE', 'alemannie': 'DE', 'berlin': 'DE', 'frankfurt': 'DE', 'munich': 'DE', 'múnich': 'DE',
+
+  // 🇮🇹 Italy
+  'italia': 'IT', 'roma': 'IT', 'napoles': 'IT', 'napoli': 'IT', 'venecia': 'IT', 'milan': 'IT', 'milán': 'IT',
+
+  // 🇬🇧 United Kingdom
+  'reino unido': 'GB', 'inglaterra': 'GB', 'londres': 'GB', 'manchester': 'GB', 'escocia': 'GB', 'edimburgo': 'GB',
+
+  // 🇺🇸 USA
+  'estados unidos': 'US', 'eeuu': 'US', 'new york': 'US', 'nueva york': 'US', 'miami': 'US', 'los angeles': 'US', 'chicago': 'US',
+
+  // 🇨🇦 Canada
+  'canadá': 'CA', 'canada': 'CA', 'toronto': 'CA', 'vancouver': 'CA', 'montreal': 'CA',
+
+  // 🇲🇽 Mexico
+  'méxico': 'MX', 'mexico': 'MX', 'cancún': 'MX', 'cancun': 'MX', 'cdmx': 'MX',
+
+  // 🇧🇷 Brazil
+  'brasil': 'BR', 'rio': 'BR', 'rio de janeiro': 'BR', 'sao paulo': 'BR', 'são paulo': 'BR',
+
+  // 🇦🇷 Argentina
+  'argentina': 'AR', 'buenos aires': 'AR',
+
+  // 🇨🇱 Chile
+  'chile': 'CL', 'santiago': 'CL',
+
+  // 🇵🇪 Peru
+  'perú': 'PE', 'peru': 'PE', 'lima': 'PE',
+
+  // 🇨🇴 Colombia
+  'colombia': 'CO', 'bogotá': 'CO', 'bogota': 'CO',
+
+  // 🇯🇵 Japan
+  'japon': 'JP', 'japón': 'JP', 'tokyo': 'JP', 'osaka': 'JP',
+
+  // 🇰🇷 South Korea
+  'corea del sur': 'KR', 'corea': 'KR', 'seul': 'KR', 'seúl': 'KR',
+
+  // 🇨🇳 China
+  'china': 'CN', 'pekin': 'CN', 'pekín': 'CN', 'beijing': 'CN', 'shanghái': 'CN', 'shanghai': 'CN',
+
+  // 🇮🇳 India
+  'india': 'IN', 'delhi': 'IN', 'nueva delhi': 'IN', 'mumbai': 'IN',
+
+  // 🇹🇭 Thailand
+  'tailandia': 'TH', 'bangkok': 'TH',
+
+  // 🇸🇬 Singapore
+  'singapur': 'SG',
+
+  // 🇹🇷 Turkey
+  'turquía': 'TR', 'turquia': 'TR', 'estambul': 'TR', 'istanbul': 'TR',
+
+  // 🇦🇪 UAE
+  'dubai': 'AE', 'emiratos': 'AE', 'emiratos árabes': 'AE', 'emiratos arabes': 'AE', 'abudhabi': 'AE', 'abu dhabi': 'AE',
+
+  // 🌍 Africa
+  'marruecos': 'MA', 'casablanca': 'MA', 'marrakech': 'MA',
+  'túnez': 'TN', 'tunez': 'TN',
+  'egipto': 'EG', 'el cairo': 'EG', 'cairo': 'EG',
+  'sudáfrica': 'ZA', 'sudafrica': 'ZA', 'johannesburgo': 'ZA', 'ciudad del cabo': 'ZA',
+  'kenia': 'KE', 'nairobi': 'KE',
+  'senegal': 'SN', 'dakar': 'SN',
+  'nigeria': 'NG', 'lagos': 'NG',
+
+  // 🇮🇸 Iceland
+  'islandia': 'IS', 'reykjavik': 'IS',
+
+  // 🇳🇴 Norway
+  'noruega': 'NO', 'oslo': 'NO',
+
+  // 🇸🇪 Sweden
+  'suecia': 'SE', 'estocolmo': 'SE',
+
+  // 🇫🇮 Finland
+  'finlandia': 'FI', 'helsinki': 'FI',
+
+  // 🇵🇹 Portugal
+  'portugal': 'PT', 'lisboa': 'PT', 'lisbon': 'PT', 'porto': 'PT',
+
+  // 🇬🇷 Greece
+  'grecia': 'GR', 'atenas': 'GR',
+
+  // 🇳🇱 Netherlands
+  'paises bajos': 'NL', 'países bajos': 'NL', 'holanda': 'NL', 'amsterdam': 'NL',
+
+  // 🇨🇭 Switzerland
+  'suiza': 'CH', 'zurich': 'CH', 'ginebra': 'CH',
+
+  // 🇦🇹 Austria
+  'austria': 'AT', 'viena': 'AT',
+
+  // 🇧🇪 Belgium
+  'bélgica': 'BE', 'belgica': 'BE', 'bruselas': 'BE',
+
+  // 🇵🇱 Poland
+  'polonia': 'PL', 'varsovia': 'PL',
+
+  // 🇭🇺 Hungary
+  'hungría': 'HU', 'hungria': 'HU', 'budapest': 'HU',
+
+  // 🇨🇿 Czech Republic
+  'chequia': 'CZ', 'república checa': 'CZ', 'praga': 'CZ',
+
+  // 🇷🇴 Romania
+  'rumanía': 'RO', 'rumania': 'RO', 'bucarest': 'RO',
+
+  // 🇲🇹 Malta
+  'malta': 'MT',
+
+  // 🇮🇪 Ireland
+  'irlanda': 'IE', 'dublín': 'IE', 'dublin': 'IE',
+
+     // 🇵🇸 Palestine
+  'palestina': 'PS', 'cisjordania': 'PS', 'jerusalén este': 'PS', 'jerusalen este': 'PS', 'gaza': 'PS', 'ramala': 'PS', 'nablus': 'PS', 'hebrón': 'PS', 'hebron': 'PS',
+
+   // 🇸🇦 Saudi Arabia
+  'arabia saudi': 'SA', 'arabia saudita': 'SA', 'riad': 'SA', 'riyadh': 'SA', 'la meca': 'SA', 'meca': 'SA',
+
+  // 🇯🇴 Jordan
+  'jordania': 'JO', 'amman': 'JO', 'petra': 'JO',
+
+  // 🇱🇧 Lebanon
+  'líbano': 'LB', 'libano': 'LB', 'beirut': 'LB',
+
+  // 🇮🇷 Iran
+  'irán': 'IR', 'iran': 'IR', 'teherán': 'IR', 'teheran': 'IR',
+
+  // 🇶🇦 Qatar
+  'qatar': 'QA', 'doha': 'QA',
+
+  // 🇴🇲 Oman
+  'oman': 'OM', 'mascate': 'OM', 'muscat': 'OM',
+
+  // 🇰🇼 Kuwait
+  'kuwait': 'KW',
+
+  // 🇧🇭 Bahrain
+  'baréin': 'BH', 'barein': 'BH',
+
+  // 🇯🇴 United Arab Emirates (already partially added)
+     // 🇦🇺 Australia
+  'australia': 'AU', 'sydney': 'AU', 'melbourne': 'AU', 'brisbane': 'AU', 'perth': 'AU',
+
+  // 🇳🇿 New Zealand
+  'nueva zelanda': 'NZ', 'new zealand': 'NZ', 'auckland': 'NZ', 'wellington': 'NZ', 'queenstown': 'NZ',
+
+  // 🇫🇯 Fiji
+  'fiyi': 'FJ', 'fiji': 'FJ',
+
+  // 🇵🇫 French Polynesia
+  'polinesia francesa': 'PF', 'tahiti': 'PF',
+      // 🇨🇺 Cuba
+  'cuba': 'CU', 'la habana': 'CU', 'habana': 'CU',
+
+  // 🇩🇴 Dominican Republic
+  'república dominicana': 'DO', 'republica dominicana': 'DO', 'punta cana': 'DO', 'santo domingo': 'DO',
+
+  // 🇵🇷 Puerto Rico
+  'puerto rico': 'PR', 'san juan': 'PR',
+
+  // 🇯🇲 Jamaica
+  'jamaica': 'JM', 'kingston': 'JM', 'montego bay': 'JM',
+
+  // 🇧🇸 Bahamas
+  'bahamas': 'BS', 'nassau': 'BS',
+
+  // 🇲🇶 Martinique
+  'martinica': 'MQ',
+
+  // 🇬🇵 Guadeloupe
+  'guadalupe': 'GP',
+
+  // 🇹🇹 Trinidad and Tobago
+  'trinidad y tobago': 'TT', 'trinidad': 'TT', 'puerto españa': 'TT',
+
+
+};
 
   const iso = nameToCodeMap[name];
   if (!iso) {
@@ -457,3 +621,5 @@ handleEventClick(arg: any): void {
 }
 
 }
+
+

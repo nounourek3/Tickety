@@ -1,16 +1,26 @@
 <div class="login-container">
   <form (submit)="login(); $event.preventDefault()">
-    <h2>Iniciar sesión</h2>
+    <h2 class="text-center mb-4">Iniciar sesión</h2>
 
     <input type="email" placeholder="Email" [(ngModel)]="email" name="email" required />
     <input type="password" placeholder="Contraseña" [(ngModel)]="password" name="password" required />
 
-    <button type="submit">Entrar</button>
+    <button type="submit" class="btn-login">Entrar</button>
 
-    <p *ngIf="errorMessage" class="error">{{ errorMessage }}
-      <button *ngIf="errorMessage.includes('registrarte')" (click)="router.navigate(['/registro'])">Registrarme
-        
+    <p *ngIf="errorMessage" class="error mt-3">
+      {{ errorMessage }}
+      <button *ngIf="errorMessage.includes('registrarte')" class="btn btn-link p-0 ms-1" (click)="router.navigate(['/registro'])">
+        Registrarme
       </button>
     </p>
+
+    <p class="text-center mt-4 small">
+      ¿No tienes aún cuenta?
+      <a href="/registro">Regístrate aquí</a>
+    </p>
+    <a class="btn btn-outline-danger w-100 mb-2" href="http://localhost:8080/oauth2/authorization/google">
+  <i class="bi bi-google me-2"></i> Iniciar sesión con Google
+</a>
+
   </form>
 </div>

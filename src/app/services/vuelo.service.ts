@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 
 export interface Flight {
   id?: number; // Optional for new flights
@@ -17,6 +17,7 @@ export interface Flight {
   pdfFileName?: string;
   durationHours?: number;
   showDetails?: boolean;
+  boardingFileUrl?: string;
 }
 
 @Injectable({
@@ -28,9 +29,16 @@ export class VueloService {
   constructor(private http: HttpClient) {}
 
   // 🔄 Get all flights for a specific user
-  getFlightsByUser(userId: number): Observable<Flight[]> {
-    return this.http.get<Flight[]>(`${this.apiUrl}/user/${userId}`);
-  }
+  
+getFlightsByUser(userId: number): Observable<Flight[]> {
+  return this.http.get<Flight[]>(`${this.apiUrl}/user/${userId}`).pipe(
+    tap((flights) => {
+      console.log('📦 Flights fetched from backend:', flights);
+      flights.forEach(f => console.log(`🪑 Seat for flight ${f.id}: ${f.seat}`));
+    })
+  );
+}
+  
 
   // 🆕 Save a new flight
   saveFlight(flight: Flight): Observable<any> {
@@ -48,6 +56,11 @@ export class VueloService {
 }
 updateFlight(id: number, flight: Flight): Observable<Flight> {
   return this.http.put<Flight>(`http://localhost:8080/api/flights/${id}`, flight);
+}
+uploadBoardingFile(flightId: number, file: File): Observable<Flight> {
+  const formData = new FormData();
+  formData.append('file', file);
+  return this.http.patch<Flight>(`${this.apiUrl}/upload-boarding-file/${flightId}`, formData);
 }
 
 

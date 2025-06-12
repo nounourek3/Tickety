@@ -6,13 +6,14 @@ import { TokenService } from '../../services/token.service';
 import { PopupService } from '../../services/popup.service';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-
+import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
+import { ViewChild, ElementRef } from '@angular/core';
 
 
 @Component({
   selector: 'app-mis-vuelos',
   standalone: true,
-  imports: [CommonModule, FormsModule, DragDropModule],
+  imports: [CommonModule, FormsModule, DragDropModule, NgxExtendedPdfViewerModule],
   templateUrl: './mis-vuelos.component.html',
   styleUrls: ['./mis-vuelos.component.scss']
 })
@@ -22,6 +23,11 @@ export class MisVuelosComponent implements OnInit {
   copiado = false;
   isAdding = false;
   isRoundTrip: boolean = false;
+  flightLegs: Array<'ida' | 'vuelta'> = ['ida', 'vuelta'];
+  flightSaved: { ida?: boolean; vuelta?: boolean } = {};
+
+
+  
 
   upcomingFlights: Flight[] = [];
   pastFlights: Flight[] = [];
@@ -53,6 +59,10 @@ export class MisVuelosComponent implements OnInit {
   
 };
 selectedFlight:Flight | null = null;
+flightFiles: { [key: string]: File } = {};
+
+
+
 
 
   get defaultFlight(): Flight {
@@ -69,6 +79,10 @@ selectedFlight:Flight | null = null;
       userId: this.userId
     };
   }
+  openBoardingFile(relativeUrl: string): void {
+  const fullUrl = this.getFullFileUrl(relativeUrl);
+  window.open(fullUrl, '_blank');
+}
 
 
   form: Flight = {
@@ -87,44 +101,67 @@ airportOptions = [
   { code: 'BCN', name: 'Barcelona - El Prat' },
   { code: 'AGP', name: 'Málaga - Costa del Sol' },
   { code: 'VLC', name: 'Valencia - Manises' },
+  { code: 'PMI', name: 'Palma de Mallorca' },
+  { code: 'ALC', name: 'Alicante - Elche' },
+  { code: 'SVQ', name: 'Seville - San Pablo' },
 
   // 🇫🇷 France
   { code: 'ORY', name: 'Paris - Orly' },
   { code: 'CDG', name: 'Paris - Charles de Gaulle' },
   { code: 'NCE', name: 'Nice - Côte d\'Azur' },
   { code: 'LYS', name: 'Lyon - Saint-Exupéry' },
+  { code: 'MRS', name: 'Marseille - Provence' },
+  { code: 'BOD', name: 'Bordeaux - Mérignac' },
 
   // 🇮🇹 Italy
   { code: 'FCO', name: 'Rome - Fiumicino' },
   { code: 'MXP', name: 'Milan - Malpensa' },
   { code: 'VCE', name: 'Venice - Marco Polo' },
   { code: 'NAP', name: 'Naples - Capodichino' },
+  { code: 'LIN', name: 'Milan - Linate' },
+  { code: 'CTA', name: 'Catania - Fontanarossa' },
 
   // 🇩🇪 Germany
   { code: 'FRA', name: 'Frankfurt' },
   { code: 'BER', name: 'Berlin - Brandenburg' },
   { code: 'MUC', name: 'Munich' },
   { code: 'HAM', name: 'Hamburg' },
+  { code: 'DUS', name: 'Düsseldorf' },
+  { code: 'CGN', name: 'Cologne Bonn' },
 
   // 🇬🇧 United Kingdom
   { code: 'LHR', name: 'London - Heathrow' },
   { code: 'LGW', name: 'London - Gatwick' },
   { code: 'MAN', name: 'Manchester' },
   { code: 'EDI', name: 'Edinburgh' },
+  { code: 'LTN', name: 'London - Luton' },
+  { code: 'BHX', name: 'Birmingham' },
+  { code: 'GLA', name: 'Glasgow' },
 
   // 🇺🇸 USA
   { code: 'JFK', name: 'New York - JFK' },
   { code: 'EWR', name: 'Newark' },
   { code: 'LAX', name: 'Los Angeles' },
   { code: 'MIA', name: 'Miami' },
+  { code: 'ORD', name: 'Chicago - O\'Hare' },
+  { code: 'ATL', name: 'Atlanta - Hartsfield–Jackson' },
+  { code: 'DFW', name: 'Dallas/Fort Worth' },
+  { code: 'SFO', name: 'San Francisco' },
+
+  // 🇨🇦 Canada
+  { code: 'YYZ', name: 'Toronto - Pearson' },
+  { code: 'YVR', name: 'Vancouver' },
+  { code: 'YUL', name: 'Montreal - Trudeau' },
 
   // 🇧🇷 Brazil
   { code: 'GRU', name: 'São Paulo - Guarulhos' },
   { code: 'GIG', name: 'Rio de Janeiro - Galeão' },
+  { code: 'BSB', name: 'Brasília' },
 
   // 🇲🇽 Mexico
   { code: 'MEX', name: 'Mexico City - Benito Juárez' },
   { code: 'CUN', name: 'Cancún' },
+  { code: 'GDL', name: 'Guadalajara' },
 
   // 🇦🇷 Argentina
   { code: 'EZE', name: 'Buenos Aires - Ezeiza' },
@@ -136,18 +173,39 @@ airportOptions = [
   { code: 'NRT', name: 'Tokyo - Narita' },
   { code: 'HND', name: 'Tokyo - Haneda' },
   { code: 'KIX', name: 'Osaka - Kansai' },
+  { code: 'CTS', name: 'Sapporo - New Chitose' },
 
   // 🇰🇷 South Korea
   { code: 'ICN', name: 'Seoul - Incheon' },
+
+  // 🇨🇳 China
+  { code: 'PEK', name: 'Beijing Capital' },
+  { code: 'PVG', name: 'Shanghai - Pudong' },
+  { code: 'HKG', name: 'Hong Kong International' },
+
+  // 🇮🇳 India
+  { code: 'DEL', name: 'Delhi - Indira Gandhi' },
+  { code: 'BOM', name: 'Mumbai - Chhatrapati Shivaji' },
+  { code: 'BLR', name: 'Bangalore - Kempegowda' },
+
+  // 🇦🇺 Australia
+  { code: 'SYD', name: 'Sydney' },
+  { code: 'MEL', name: 'Melbourne' },
+  { code: 'BNE', name: 'Brisbane' },
 
   // 🇹🇭 Thailand
   { code: 'BKK', name: 'Bangkok - Suvarnabhumi' },
 
   // 🇹🇷 Turkey
   { code: 'IST', name: 'Istanbul Airport' },
+  { code: 'SAW', name: 'Istanbul - Sabiha Gökçen' },
 
   // 🇦🇪 UAE
   { code: 'DXB', name: 'Dubai International' },
+  { code: 'AUH', name: 'Abu Dhabi International' },
+
+  // 🇶🇦 Qatar
+  { code: 'DOH', name: 'Doha - Hamad International' },
 
   // 🇸🇬 Singapore
   { code: 'SIN', name: 'Singapore Changi' },
@@ -196,6 +254,7 @@ airportOptions = [
         f.departureTime &&
         f.arrivalTime
       );
+       console.log('🧾 Flights received from backend:', this.myFlights);
 
       // 🧠 Split them into upcoming and past
       this.splitFlights();
@@ -205,9 +264,20 @@ airportOptions = [
 }
 
 
- addFlight(leg: string): void {
+ addFlight(leg: 'ida' | 'vuelta'): void {
   const form = this.flightForms[leg];
 
+  // ⛔️ Si se quiere guardar vuelta pero ida no ha sido guardado
+  if (this.isRoundTrip && leg === 'vuelta' && !this.flightSaved['ida']) {
+    this.popupService.showMessage(
+      'Primero guarda el vuelo de ida',
+      'Completa y guarda la información de ida antes de añadir la vuelta.',
+      'error'
+    );
+    return;
+  }
+
+  // Verificación de campos obligatorios
   const requiredFields = [
     form.flightNumber,
     form.bookingCode,
@@ -219,16 +289,40 @@ airportOptions = [
   ];
 
   if (requiredFields.some(field => !field || field.trim() === '')) {
-    this.popupService.showMessage('Campos incompletos', 'Por favor completa todos los campos.', 'error');
+    this.popupService.showMessage(
+      'Campos incompletos',
+      'Por favor completa todos los campos.',
+      'error'
+    );
     return;
   }
 
   form.userId = this.userId;
 
   this.vueloService.saveFlight(form).subscribe({
-    next: () => {
-      this.popupService.showMessage('Vuelo guardado', `El vuelo de ${leg} ha sido añadido.`, 'success');
+    next: (createdFlight: Flight) => {
+      const file = this.flightFiles[leg];
 
+      if (file && createdFlight.id) {
+        this.vueloService.uploadBoardingFile(createdFlight.id, file).subscribe({
+          next: () => {
+            this.popupService.showMessage('Tarjeta subida', 'El archivo fue subido exitosamente.', 'success');
+            this.refreshFlights();
+          },
+          error: err => {
+            console.error('❌ Error subiendo el archivo:', err);
+            this.popupService.showMessage('Error', 'No se pudo subir el archivo.', 'error');
+            this.refreshFlights();
+          }
+        });
+      } else {
+        this.refreshFlights();
+      }
+
+      // 🟢 Marcar este leg como guardado
+      this.flightSaved[leg] = true;
+
+      // Reset form y archivo
       this.flightForms[leg] = {
         flightNumber: '',
         bookingCode: '',
@@ -241,8 +335,17 @@ airportOptions = [
         seat: '',
         userId: this.userId
       };
+      delete this.flightFiles[leg];
 
-      this.refreshFlights();
+      if (!this.isRoundTrip || leg === 'vuelta') {
+        this.isAdding = false;
+      } else {
+        this.popupService.showMessage(
+          '¡Perfecto!',
+          'Vuelo de ida guardado. Ahora puedes completar la vuelta.',
+          'success'
+        );
+      }
     },
     error: (err) => {
       console.error('❌ Error al guardar el vuelo:', err);
@@ -250,6 +353,8 @@ airportOptions = [
     }
   });
 }
+
+
 
   splitFlights(): void {
   const today = new Date().toISOString().split('T')[0]; // format: yyyy-MM-dd
@@ -293,11 +398,11 @@ hideFlight(flight: Flight): void {
   this.myFlights = this.myFlights.filter(f => f !== flight);
   this.splitFlights();
 }
-handleFileUpload(event: any, leg: string) {
-  const file = event.target.files[0];
-  if (file) {
-    this.flightForms[leg].pdfFileName = file.name;
-    // Optionally store the file object for future upload
+handleFileUpload(event: Event, leg: string): void {
+  const input = event.target as HTMLInputElement;
+  if (input.files?.length) {
+    this.flightFiles[leg] = input.files[0];
+    console.log(`📎 Archivo seleccionado para ${leg}:`, this.flightFiles[leg]);
   }
 }
 calculateFlightDuration(departureTime: string, arrivalTime: string): string {
@@ -345,7 +450,30 @@ saveEditedFlight() {
     error: err => console.error('❌ Error updating flight:', err)
   });
 }
+getFullFileUrl(relativeUrl: string): string {
+  return `http://localhost:8080${relativeUrl}`;
+}
 
+
+onFileSelected(event: Event, flight: Flight): void {
+  const file = (event.target as HTMLInputElement).files?.[0];
+  if (!file) return;
+
+  this.vueloService.uploadBoardingFile(flight.id!, file).subscribe({
+    next: () => {
+      // ✅ Optional: update local flight object
+      flight.boardingFileUrl = `/uploads/boarding/flight_${flight.id}.pdf`;
+      console.log('✅ Boarding file uploaded for flight:', flight.id);
+    },
+    error: err => {
+      console.error('❌ Error uploading boarding file:', err);
+      alert('Error uploading boarding pass.');
+    }
+  });
+}
+getFileName(url: string): string {
+  return url.split('/').pop()!;
+}
 
 
 

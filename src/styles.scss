@@ -1,13 +1,14 @@
-/* You can add global styles to this file, and also import other style files */
+/* styles.scss */
+
 $primary: #4475C4;
-/* Importing Bootstrap SCSS file. */
+
+/* Import Bootstrap SCSS */
 @import 'bootstrap/scss/bootstrap';
 
-
-body {
+/* GLOBAL styles */
+html, body {
+  height: 100%;
+  margin: 0;
   
   font-family: "Tuffy", sans-serif;
-  
-  
-  }
-  
+}

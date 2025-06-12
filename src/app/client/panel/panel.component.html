@@ -1,102 +1,99 @@
 <div class="panel-container container mt-4">
 
   <!-- 🔢 KPIs -->
-  <div class="row mb-4 text-center">
-    <div class="col-md-4">
-      <div class="kpi-box p-3 rounded shadow-sm bg-white">
+  <div class="row mb-4 text-center justify-content-center gap-3">
+    <div class="col-auto">
+      <div class="kpi-box p-1 rounded shadow-sm  ">
         <h6 class="text-muted">Países visitados</h6>
-        <h2>{{ visitedCountries.length }}</h2>
+        <h2 class="kpis">{{ visitedCountries.length }}</h2>
       </div>
     </div>
-    <div class="col-md-4">
-      <div class="kpi-box p-3 rounded shadow-sm bg-white" (click)="abrirModalWishlist()">
-        <h6 class="text-muted">Wishlist</h6>
-        <h2>{{ wishlistCountries.length }}</h2>
-      </div>
+    <div class="col-auto">
+      <div class="kpi-box p-1 rounded shadow-sm  wishlist-kpi" (click)="abrirModalWishlist()">
+  <h6 class="text-muted">Wishlist <i class="bi bi-plus-circle ms-1 text-primary"></i></h6>
+  <h2 class="kpis">{{ wishlistCountries.length }}</h2>
+</div>
+
     </div>
-    <div class="col-md-4">
-      <div class="kpi-box p-3 rounded shadow-sm bg-white">
+    <div class="col-auto">
+      <div class="kpi-box p-1 rounded shadow-sm ">
         <h6 class="text-muted">% del mundo visitado</h6>
-        <h2>{{ percentVisited }}%</h2>
+        <h2 class="kpis">{{ percentVisited }}%</h2>
       </div>
     </div>
   </div>
 
-  <!-- 📋 Main content -->
-  <div class="row g-4">
-    <!-- 🧭 Left section -->
-    <div class="col-md-8 d-flex flex-column gap-3">
+ <!-- 📍 First row: Mis viajes + Mapa -->
+<div class="d-flex flex-column flex-lg-row gap-3 mb-4 w-100">
+  <!-- 🧳 Mis viajes (narrow) -->
+  <div class="bg-white border rounded shadow-sm p-3 flex-shrink-0 mis-viajes-box">
 
-      <!-- 🌐 Mis viajes y mapa -->
-      <div class="d-flex flex-column flex-md-row gap-3">
-        <!-- Lista de viajes -->
-        <div class="flex-fill p-3 rounded shadow-sm bg-white border" style="min-height: 280px;">
-          <h5 class="mb-3">Mis viajes</h5>
-          <div *ngIf="visitedCountries.length > 0; else noCountries">
-            <div *ngFor="let country of visitedCountries" class="d-flex align-items-center mb-2">
-              <img [src]="'https://flagcdn.com/24x18/' + country.toLowerCase() + '.png'" class="me-2 rounded" />
-              <span>{{ countryNameMap[country] || country }}</span>
-            </div>
-          </div>
-          <ng-template #noCountries>
-            <p class="text-muted">No se han registrado países aún.</p>
-          </ng-template>
-        </div>
+    <h5 class="mb-3 text-center">Paises Visitados</h5>
+    <div *ngIf="visitedCountries.length > 0; else noCountries" class="d-flex flex-wrap gap-2">
+  <div *ngFor="let country of visitedCountries" class="country-badge d-flex align-items-center gap-2 px-2 py-1 border rounded-pill bg-light text-dark small">
+    <img [src]="'https://flagcdn.com/24x18/' + country.toLowerCase() + '.png'" width="20" height="15" class="rounded" />
+    <span>{{ countryNameMap[country] || country }}</span>
+  </div>
+</div>
 
-        <!-- Mapa -->
-        <div class="flex-fill d-flex flex-column gap-2">
-          <div class="rounded shadow-sm border bg-white" style="height: 280px;">
-            <div id="map" style="width: 100%; height: 100%; border-radius: 0.5rem;"></div>
-          </div>
-          <div class="p-3 rounded shadow-sm bg-white border">
-            <h6><i class="bi bi-map-fill me-2"></i>Leyenda</h6>
-            <ul class="list-unstyled mb-0">
-              <li><span class="legend-box bg-danger me-2"></span> Países visitados</li>
-              <li><span class="legend-box bg-primary me-2"></span> Próximos vuelos</li>
-              <li><span class="legend-box bg-warning me-2"></span> Wishlist</li>
-            </ul>
-          </div>
-        </div>
-      </div>
+    <ng-template #noCountries>
+      <p class="text-muted">No se han registrado países aún.</p>
+    </ng-template>
+  </div>
+
+  <!-- 🗺️ Mapa (grows to fill remaining space) -->
+  <div class="d-flex flex-column flex-grow-1 gap-2">
+    <div class="bg-white border rounded shadow-sm" style="height: 400px;">
+      <div id="map" style="width: 100%; height: 100%; border-radius: 0.5rem;"></div>
     </div>
-
-    <!-- 📆 Right section -->
-    <div class="col-md-4 d-flex flex-column gap-3">
-      <!-- Calendario -->
-      <div class="calendar-box p-3 rounded shadow-sm bg-white border">
-        <full-calendar [options]="calendarOptions"></full-calendar>
-      </div>
-
-      <!-- Próximos vuelos -->
-      <div class="upcoming-bookings p-3 rounded shadow-sm bg-white border">
-        <h6>Próximos vuelos</h6>
-        <div *ngIf="upcomingFlights.length > 0; else noFlights">
-          <div *ngFor="let vuelo of upcomingFlights" class="booking-card border rounded p-2 d-flex align-items-center justify-content-between mb-2">
-            <div>
-              <strong>{{ vuelo.departureAirport }} → {{ vuelo.arrivalAirport }}</strong><br />
-              <small>{{ vuelo.flightDate | date:'shortDate' }}</small>
-            </div>
-            <div class="text-end">
-              <small class="text-muted">Duración</small><br />
-              <strong>{{ vuelo.durationHours }}h</strong>
-            </div>
-          </div>
-        </div>
-        <ng-template #noFlights>
-          <p class="text-muted">No hay vuelos próximos.</p>
-        </ng-template>
-      </div>
+    <div class="p-3 rounded shadow-sm bg-white border">
+      <h6 class="text-center"><i class="bi bi-map-fill me-2"></i>Leyenda</h6>
+      <ul class="list-unstyled d-flex flex-wrap align-items-center justify-content-center gap-3 small mb-0">
+        <li class="d-flex align-items-center"><span class="legend-box bg-danger me-2"></span> Países visitados</li>
+        <li class="d-flex align-items-center"><span class="legend-box bg-primary me-2"></span> Próximos vuelos</li>
+        <li class="d-flex align-items-center"><span class="legend-box bg-warning me-2"></span> Wishlist</li>
+      </ul>
     </div>
   </div>
+</div>
+
+<!-- 📍 Second row: Calendario + Próximos vuelos -->
+<div class="d-flex flex-column flex-lg-row gap-3 w-100">
+  <!-- 📅 Calendario (grows) -->
+  <div class="calendar-box p-3 rounded shadow-sm bg-white border flex-grow-1">
+    <full-calendar [options]="calendarOptions"></full-calendar>
+  </div>
+
+  <!-- ✈️ Próximos vuelos (narrow) -->
+  <div class="upcoming-bookings p-3 rounded shadow-sm bg-white border flex-shrink-0">
+
+    <h6>Próximos vuelos</h6>
+    <div *ngIf="upcomingFlights.length > 0; else noFlights">
+      <div *ngFor="let vuelo of upcomingFlights" class="booking-card border rounded p-2 d-flex align-items-center justify-content-between mb-2">
+        <div>
+          <strong>{{ vuelo.departureAirport }} → {{ vuelo.arrivalAirport }}</strong><br />
+          <small>{{ vuelo.flightDate | date:'shortDate' }}</small>
+        </div>
+        <div class="text-end">
+          <a href="/client/mis-vuelos" class="text-muted small text-decoration-none">Ver</a>
+        </div>
+      </div>
+    </div>
+    <ng-template #noFlights>
+      <p class="text-muted">No hay vuelos próximos.</p>
+    </ng-template>
+  </div>
+</div>
+
 
   <!-- ⭐ Wishlist Modal -->
   <div class="modal-backdrop" *ngIf="wishlistAbierto">
     <div class="modal-content">
-      <h5>🌟 Lugares que quieres visitar</h5>
+      <h5 class="text-center">Lugares que quieres visitar</h5>
       <ul class="list-group mb-3">
         <li *ngFor="let lugar of wishlistCountries; let i = index" class="list-group-item d-flex justify-content-between align-items-center">
           {{ lugar }}
-          <button class="btn btn-sm btn-danger" (click)="eliminarDeWishlist(i)">
+          <button class="btn-eliminar btn btn-sm " (click)="eliminarDeWishlist(i)">
             <i class="bi bi-trash"></i>
           </button>
         </li>
@@ -104,7 +101,7 @@
 
       <div class="input-group">
         <input [(ngModel)]="nuevoDestino" class="form-control" placeholder="Ej. Japón, Islandia, Nueva York" />
-        <button class="btn btn-primary" (click)="addToWishlist()">
+        <button class="btn-add btn " (click)="addToWishlist()">
           <i class="bi bi-plus-lg"></i> Añadir
         </button>
       </div>

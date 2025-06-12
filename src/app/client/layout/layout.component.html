@@ -1,2 +1,14 @@
-<app-header-client></app-header-client>
-<router-outlet></router-outlet>
+<ng-container *ngIf="ready; else loading">
+  <ng-container *ngIf="loggedIn; else redirectToLogin">
+    <app-header-client></app-header-client>
+    <router-outlet></router-outlet>
+  </ng-container>
+</ng-container>
+
+<ng-template #redirectToLogin>
+  <p>Not logged in</p> <!-- Or route to login page -->
+</ng-template>
+
+<ng-template #loading>
+  <div class="spinner-container">Cargando...</div>
+</ng-template>

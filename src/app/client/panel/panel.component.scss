@@ -1,3 +1,14 @@
+*{
+  font-family: "Tuffy", sans-serif;
+}
+.panel-container {
+  background-color: rgb(199, 222, 240);
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
+}
+
+
 .modal-backdrop {
   position: fixed;
   top: 0; left: 0;
@@ -7,6 +18,18 @@
   justify-content: center;
   align-items: center;
   z-index: 9999;
+}
+.text-muted{
+  font-size: 13px;
+}
+.kpis{
+  font-size: 18px;
+}
+.kpi-box{
+  width:200px;
+  height:60px;
+  background-color: white;
+  
 }
 
 .modal-content {
@@ -28,4 +51,56 @@
   width: 12px;
   height: 12px;
   border-radius: 2px;
+}
+/* Default widths for large screens */
+.mis-viajes-box {
+  width: 220px;
+}
+
+.upcoming-bookings {
+  width: 300px;
+}
+.wishlist-kpi {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.wishlist-kpi:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.2);
+}
+/* Optional clean hover and size control */
+.country-badge {
+  white-space: nowrap;
+  font-size: 0.85rem;
+  transition: background-color 0.2s ease;
+}
+
+.country-badge:hover {
+  background-color: #c2d4e5;
+}
+.btn-eliminar{
+  background-color: rgb(79, 144, 193);
+  color:white;
+}
+.btn-add{
+  background-color: rgb(3, 55, 3);
+  color:white;
+}
+
+
+
+/* Full width on small screens */
+@media (max-width: 576px) {
+  .mis-viajes-box,
+  .upcoming-bookings {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .upcoming-bookings,
+  .mis-viajes-box {
+    width: 100% !important;
+  }
 }

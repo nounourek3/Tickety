@@ -7,15 +7,16 @@
     <div class="row">
       <div class="col-md-3 text-center">
         <div class="position-relative d-inline-block">
-          <img [src]="profileImageUrl || 'https://via.placeholder.com/120'" alt="Foto de perfil" class="rounded-circle mb-2" width="120" height="120">
+          <img [src]="profileImageUrl || 'profile.jpg'" alt="Foto de perfil" class="rounded-circle mb-2" width="120" height="120">
           <label class="position-absolute bottom-0 end-0 bg-primary rounded-circle p-1" style="cursor: pointer;">
             <i class="camera-button bi bi-camera text-white" style="font-size: 1.2rem; color: black;"></i>
 
             <input type="file" accept="image/*" hidden (change)="onProfileImageChange($event)" [disabled]="editMode">
           </label>
         </div>
-        <h5 class="mb-0">Alexa Rawles</h5>
-        <p class="text-muted">alexarawles&#64;gmail.com</p>
+        <h5 class="mb-0">{{ user.username || 'Usuario' }}</h5>
+        <p class="text-muted">{{ user.email || 'correo@ejemplo.com' }}</p>
+
         <button class="btn btn-outline-primary btn-sm mt-2" (click)="toggleEdit()">
           {{ editMode ? 'Guardar' : 'Editar' }}
         </button>
@@ -23,10 +24,11 @@
 
       <div class="col-md-9">
         <div class="row">
-          <div class="col-md-6 mb-3">
-            <label class="form-label">Nombre completo</label>
-            <input type="text" class="form-control" placeholder="Tu nombre" [disabled]="!editMode">
-          </div>
+         <div class="col-md-6 mb-3">
+  <label class="form-label">Nombre completo</label>
+  <input type="text" class="form-control" placeholder="Tu nombre" [(ngModel)]="user.username" [disabled]="!editMode">
+</div>
+
           <div class="col-md-6 mb-3">
             <label class="form-label">Apodo</label>
             <input type="text" class="form-control" placeholder="Tu apodo" [disabled]="!editMode">

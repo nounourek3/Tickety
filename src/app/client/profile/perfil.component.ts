@@ -20,6 +20,7 @@ export class PerfilComponent implements OnInit {
 
   userId: number = 0;
   user={
+    username:'',
     email:'',
     password:'',
   }
@@ -86,7 +87,10 @@ this.userId = authData.userId || 0;
 
   this.http.patch(`http://localhost:8080/api/user/${this.userId}`, {
     email: this.user.email,
-    password: this.user.password
+    password: this.user.password,
+    username: this.user.username
+
+     
   }).subscribe({
     next: () => {
   this.popupService.showMessage(
@@ -98,6 +102,7 @@ this.userId = authData.userId || 0;
   this.editMode = false;
   this.confirmPassword = '';
   this.user.password = '';
+  this.getUserProfile();
 
 
     },
@@ -121,6 +126,7 @@ this.userId = authData.userId || 0;
   this.http.get<any>(`http://localhost:8080/api/user/${this.userId}`).subscribe({
     next: (res) => {
       this.user.email = res.email;
+       this.user.username = res.username;
       this.profileImageUrl = `http://localhost:8080${res.profileImageUrl}`;
 
     },
